@@ -27,11 +27,56 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* Animated gradient background for hero */
+    :root {
+      --hero-crop-top: 0%;
+    }
+
+    /* Hero background image */
     .hero-gradient {
-      background: linear-gradient(135deg, #0a1628 0%, #0f2847 40%, #1e3a5f 60%, #0f2847 80%, #0a1628 100%);
+      background-image: url('assets/images/e4nufull.png');
+      background-size: cover;
+      /* Increase --hero-crop-top to push image up and hide more top area */
+      background-position: center var(--hero-crop-top);
+      background-repeat: no-repeat;
+    }
+
+    /* Animated dark overlay for hero */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(10,22,40,0.82) 0%, rgba(15,40,71,0.72) 40%, rgba(30,58,95,0.62) 60%, rgba(15,40,71,0.72) 80%, rgba(10,22,40,0.82) 100%);
       background-size: 400% 400%;
       animation: gradientShift 12s ease infinite;
+    }
+    .hero-logo {
+      width: min(34rem, 82vw);
+      height: auto;
+      margin-inline: auto;
+      filter:
+        brightness(0)
+        invert(1)
+        drop-shadow(0 10px 26px rgba(2, 6, 23, 0.72))
+        drop-shadow(0 0 34px rgba(56, 189, 248, 0.35));
+    }
+    .nav-logo {
+      width: 3.5rem;
+      height: auto;
+      filter:
+        brightness(0)
+        invert(1)
+        drop-shadow(0 2px 12px rgba(2, 6, 23, 0.6));
+      transition: filter 0.25s ease;
+    }
+    .group:hover .nav-logo {
+      filter:
+        brightness(0)
+        invert(1)
+        drop-shadow(0 2px 14px rgba(56, 189, 248, 0.45));
+    }
+    @media (min-width: 768px) {
+      .hero-logo {
+        width: min(42rem, 74vw);
+      }
     }
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
@@ -129,6 +174,348 @@
       color: #7dd3fc; /* sky-300 / our glow color */
       text-shadow: 0 0 20px rgba(125, 211, 252, 0.55), 0 1px 3px rgba(0,0,0,0.4);
     }
+
+    /* About interaction animation */
+    .interaction-card {
+      background: linear-gradient(145deg, rgba(15,40,71,0.55), rgba(10,22,40,0.75));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 60px rgba(2,6,23,0.35);
+    }
+    .interaction-stage {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      background:
+        radial-gradient(circle at 65% 45%, rgba(56, 189, 248, 0.16), transparent 55%),
+        linear-gradient(180deg, rgba(10,22,40,0.28), rgba(10,22,40,0.72));
+    }
+    .interaction-stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 38px,
+        rgba(56, 189, 248, 0.05) 39px,
+        transparent 40px
+      );
+      opacity: 0.5;
+    }
+    .interaction-svg {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .interaction-track {
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+    .electron-in-track {
+      stroke: rgba(125, 211, 252, 0.48);
+    }
+    .electron-out-track {
+      stroke: rgba(125, 211, 252, 0.42);
+      stroke-dasharray: 6 8;
+      animation: outgoingTrackPulse 8s linear infinite;
+    }
+    .proton-track {
+      stroke: rgba(248, 113, 113, 0.44);
+      stroke-dasharray: 7 8;
+      animation: protonTrackPulse 8s linear infinite;
+    }
+    @keyframes outgoingTrackPulse {
+      0%, 34%, 100% { opacity: 0.12; }
+      44%, 78% { opacity: 0.82; }
+    }
+    @keyframes protonTrackPulse {
+      0%, 36%, 100% { opacity: 0.08; }
+      42%, 80% { opacity: 0.9; }
+    }
+    .electron-group {
+      animation: electronScatter 8s ease-in-out infinite;
+    }
+    .electron-particle {
+      filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.8));
+    }
+    @keyframes electronScatter {
+      0% {
+        transform: translate(0px, 0px);
+        opacity: 0;
+      }
+      6% {
+        opacity: 1;
+      }
+      26% {
+        transform: translate(285px, -10px);
+        opacity: 1;
+      }
+      34% {
+        transform: translate(285px, -10px);
+        opacity: 1;
+      }
+      82% {
+        transform: translate(650px, -90px);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(650px, -90px);
+        opacity: 0;
+      }
+    }
+    .gamma-wave {
+      fill: none;
+      stroke: #fef08a;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 8 7;
+      opacity: 0;
+      animation: gammaExchange 8s linear infinite;
+      filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.85));
+    }
+    @keyframes gammaExchange {
+      0%, 22% {
+        opacity: 0;
+        stroke-dashoffset: 0;
+      }
+      24% {
+        opacity: 1;
+      }
+      34% {
+        opacity: 1;
+        stroke-dashoffset: -44;
+      }
+      42%, 100% {
+        opacity: 0;
+        stroke-dashoffset: -72;
+      }
+    }
+    .interaction-flash {
+      transform-origin: 365px 170px;
+      opacity: 0;
+      animation: vertexFlash 8s ease-in-out infinite;
+    }
+    @keyframes vertexFlash {
+      0%, 22%, 100% {
+        opacity: 0;
+        transform: scale(0.35);
+      }
+      27% {
+        opacity: 0.95;
+        transform: scale(1.4);
+      }
+      34% {
+        opacity: 0;
+        transform: scale(0.65);
+      }
+    }
+    .nucleus-halo {
+      transform-origin: 430px 170px;
+      animation: nucleusHaloShift 8s ease-in-out infinite;
+    }
+    .nucleus-shell {
+      transform-origin: 430px 170px;
+      animation: nucleusStateShift 8s ease-in-out infinite;
+    }
+    @keyframes nucleusHaloShift {
+      0%, 30%, 100% {
+        transform: scale(1);
+        opacity: 0.2;
+      }
+      40% {
+        transform: scale(1.34);
+        opacity: 0.65;
+      }
+      58% {
+        transform: scale(1.14);
+        opacity: 0.34;
+      }
+    }
+    @keyframes nucleusStateShift {
+      0%, 30%, 100% {
+        transform: scale(1);
+        opacity: 0.55;
+      }
+      40% {
+        transform: scale(1.18);
+        opacity: 0.95;
+      }
+      58% {
+        transform: scale(1.08);
+        opacity: 0.7;
+      }
+    }
+    .proton-group {
+      opacity: 0;
+      animation: protonEmission 8s ease-in-out infinite;
+    }
+    .proton-particle {
+      filter: drop-shadow(0 0 9px rgba(248, 113, 113, 0.8));
+    }
+    @keyframes protonEmission {
+      0%, 36% {
+        transform: translate(0px, 0px);
+        opacity: 0;
+      }
+      40% {
+        opacity: 1;
+      }
+      82% {
+        transform: translate(220px, 116px);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(256px, 142px);
+        opacity: 0;
+      }
+    }
+    .interaction-label {
+      opacity: 0;
+    }
+    .gamma-label {
+      animation: gammaLabelVisibility 8s linear infinite;
+    }
+    .excited-label {
+      animation: excitedLabelVisibility 8s linear infinite;
+    }
+    .deflected-label {
+      animation: deflectedLabelVisibility 8s linear infinite;
+    }
+    .emitted-label {
+      animation: emittedLabelVisibility 8s linear infinite;
+    }
+    @keyframes gammaLabelVisibility {
+      0%, 23%, 100% {
+        opacity: 0;
+      }
+      26%, 35% {
+        opacity: 1;
+      }
+      42% {
+        opacity: 0;
+      }
+    }
+    @keyframes excitedLabelVisibility {
+      0%, 34%, 100% {
+        opacity: 0;
+      }
+      40%, 86% {
+        opacity: 1;
+      }
+      92% {
+        opacity: 0;
+      }
+    }
+    @keyframes deflectedLabelVisibility {
+      0%, 38%, 100% {
+        opacity: 0;
+      }
+      46%, 88% {
+        opacity: 1;
+      }
+      94% {
+        opacity: 0;
+      }
+    }
+    @keyframes emittedLabelVisibility {
+      0%, 40%, 100% {
+        opacity: 0;
+      }
+      48%, 90% {
+        opacity: 1;
+      }
+      96% {
+        opacity: 0;
+      }
+    }
+    .interaction-step {
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      background: rgba(15, 23, 42, 0.35);
+      color: rgba(226, 232, 240, 0.85);
+      animation: stepPulse 8s linear infinite;
+    }
+    .interaction-step:nth-child(2) { animation-delay: 2s; }
+    .interaction-step:nth-child(3) { animation-delay: 4s; }
+    .interaction-step:nth-child(4) { animation-delay: 6s; }
+    @keyframes stepPulse {
+      0%, 100% {
+        border-color: rgba(56, 189, 248, 0.2);
+        background: rgba(15, 23, 42, 0.35);
+        color: rgba(226, 232, 240, 0.85);
+        box-shadow: none;
+      }
+      8%, 20% {
+        border-color: rgba(125, 211, 252, 0.72);
+        background: rgba(56, 189, 248, 0.14);
+        color: rgba(240, 249, 255, 0.98);
+        box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.25), 0 0 26px rgba(56, 189, 248, 0.2);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .electron-group,
+      .gamma-wave,
+      .interaction-flash,
+      .nucleus-halo,
+      .nucleus-shell,
+      .proton-group,
+      .interaction-label,
+      .interaction-step,
+      .electron-out-track,
+      .proton-track {
+        animation: none !important;
+      }
+      .electron-group,
+      .proton-group {
+        opacity: 1;
+      }
+      .interaction-label {
+        opacity: 1;
+      }
+      .photo-track {
+        transition: none !important;
+      }
+    }
+
+    /* Collaboration photo carousel */
+    .photo-carousel {
+      box-shadow: 0 26px 70px rgba(2, 6, 23, 0.32);
+    }
+    .photo-slide img {
+      width: 100%;
+      height: clamp(16rem, 45vw, 30rem);
+      object-fit: cover;
+    }
+    .carousel-control {
+      width: 2.8rem;
+      height: 2.8rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(125, 211, 252, 0.3);
+      background: rgba(15, 40, 71, 0.7);
+      color: #e2e8f0;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+    .carousel-control:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: rgba(125, 211, 252, 0.7);
+      color: #bae6fd;
+    }
+    .carousel-dot {
+      width: 0.65rem;
+      height: 0.65rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(125, 211, 252, 0.45);
+      background: rgba(15, 40, 71, 0.8);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .carousel-dot.active {
+      background: #38bdf8;
+      transform: scale(1.2);
+    }
+
   </style>
 </head>
 
@@ -138,13 +525,11 @@
   <nav id="navbar" class="fixed top-0 w-full z-50 nav-blur bg-navy/80 border-b border-white/5 transition-all duration-300">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="#hero" class="flex items-center gap-3 group">
-        <span class="text-2xl font-bold tracking-tight">
-          <span class="text-accent">e</span><span class="text-white">4</span><span class="text-accent">nu</span>
-        </span>
+        <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="nav-logo">
       </a>
       <div class="hidden md:flex items-center gap-8 text-sm font-medium">
         <a href="#about" class="text-gray-400 hover:text-accent transition-colors">About</a>
-        <a href="#news" class="text-gray-400 hover:text-accent transition-colors">News</a>
+        <a href="#photos" class="text-gray-400 hover:text-accent transition-colors">Photos</a>
         <a href="#team" class="text-gray-400 hover:text-accent transition-colors">Team</a>
         <a href="#publications" class="text-gray-400 hover:text-accent transition-colors">Publications</a>
         <a href="#talks" class="text-gray-400 hover:text-accent transition-colors">Talks</a>
@@ -163,7 +548,7 @@
     <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 bg-navy/95 nav-blur">
       <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium">
         <a href="#about" class="text-gray-400 hover:text-accent transition-colors mobile-link">About</a>
-        <a href="#news" class="text-gray-400 hover:text-accent transition-colors mobile-link">News</a>
+        <a href="#photos" class="text-gray-400 hover:text-accent transition-colors mobile-link">Photos</a>
         <a href="#team" class="text-gray-400 hover:text-accent transition-colors mobile-link">Team</a>
         <a href="#publications" class="text-gray-400 hover:text-accent transition-colors mobile-link">Publications</a>
         <a href="#talks" class="text-gray-400 hover:text-accent transition-colors mobile-link">Talks</a>
@@ -174,6 +559,9 @@
 
   <!-- Hero Section -->
   <section id="hero" class="hero-gradient relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Animated dark gradient overlay -->
+    <div class="hero-overlay"></div>
+
     <!-- Particle field -->
     <div class="particle-field" id="particles"></div>
 
@@ -193,11 +581,11 @@
           Electrons for Neutrinos Collaboration
         </span>
       </div>
-      <h1 class="text-6xl md:text-8xl font-black tracking-tight mb-6">
-        <span class="text-white">e</span><span class="text-accent">4</span><span class="text-white">nu</span>
+      <h1 class="mb-6">
+        <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="hero-logo" style="width: 400px; height: auto;">
       </h1>
-      <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
-        Precision electron-nucleus measurements to test, constrain, and validate models of neutrino-nucleus interactions.
+      <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-10">
+        Precision electron-nucleus measurements to design, constrain, and validate models of neutrino-nucleus interactions.
       </p>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <a href="#about" class="px-8 py-3 bg-accent text-navy font-semibold rounded-full hover:bg-glow transition-colors">
@@ -241,6 +629,63 @@
         </div>
       </div>
 
+      <div class="reveal mt-16">
+        <div class="interaction-card rounded-3xl border border-white/10 p-6 md:p-10">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Electron-Nucleus Interaction</h3>
+              <p class="text-gray-400 mt-2 max-w-3xl">A stylized view of an <span class="font-mono text-accent">(e,e&apos;p)</span> process: the electron exchanges a virtual photon with the nucleus, is deflected, and a proton can be emitted from the excited nuclear state.</p>
+            </div>
+            <span class="inline-flex items-center self-start px-3 py-1 rounded-full text-xs font-mono tracking-wide text-amber-200 border border-amber-300/40 bg-amber-300/10">Exchanged boson: γ*</span>
+          </div>
+
+          <div class="interaction-stage rounded-2xl mt-8">
+            <svg class="interaction-svg" viewBox="0 0 860 340" role="img" aria-label="Electron approaches a nucleus, exchanges a virtual photon, is deflected, and the nucleus emits a proton">
+              <path class="interaction-track electron-in-track" d="M80 180 C170 180 280 178 365 170" />
+              <path class="interaction-track electron-out-track" d="M365 170 C470 150 610 125 730 90" />
+              <path class="interaction-track proton-track" d="M430 170 C495 200 570 240 650 282" />
+
+              <circle class="nucleus-halo" cx="430" cy="170" r="54" fill="rgba(56, 189, 248, 0.2)" />
+              <circle class="nucleus-shell" cx="430" cy="170" r="37" fill="none" stroke="rgba(125, 211, 252, 0.65)" stroke-width="2.5" />
+              <circle cx="430" cy="170" r="21" fill="#e2e8f0" opacity="0.92" />
+              <circle cx="416" cy="164" r="4" fill="#38bdf8" />
+              <circle cx="438" cy="160" r="4" fill="#f87171" />
+              <circle cx="426" cy="180" r="4" fill="#38bdf8" />
+              <circle cx="444" cy="178" r="4" fill="#f87171" />
+
+              <circle class="interaction-flash" cx="365" cy="170" r="11" fill="rgba(250, 204, 21, 0.75)" />
+              <path class="gamma-wave" d="M364 170 C378 153 392 187 406 170 C420 153 434 187 448 170" />
+              <text class="interaction-label gamma-label" x="404" y="147" fill="#fde68a" font-size="15" font-family="JetBrains Mono, monospace">γ*</text>
+
+              <g class="electron-group">
+                <circle class="electron-particle" cx="80" cy="180" r="8.5" fill="#7dd3fc" />
+                <text x="94" y="186" fill="#bae6fd" font-size="14" font-family="JetBrains Mono, monospace">e-</text>
+              </g>
+
+              <g class="proton-group">
+                <circle class="proton-particle" cx="430" cy="170" r="8" fill="#f87171" />
+                <text x="444" y="176" fill="#fecaca" font-size="14" font-family="JetBrains Mono, monospace">p</text>
+              </g>
+
+              <text class="interaction-label excited-label" x="468" y="161" fill="#cbd5e1" font-size="12" font-family="JetBrains Mono, monospace">excited nucleus</text>
+              <text class="interaction-label deflected-label" x="644" y="76" fill="#93c5fd" font-size="12" font-family="JetBrains Mono, monospace">deflected electron</text>
+              <text class="interaction-label emitted-label" x="618" y="306" fill="#fca5a5" font-size="12" font-family="JetBrains Mono, monospace">emitted proton</text>
+            </svg>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-6 text-sm">
+            <div class="interaction-step rounded-xl px-4 py-3"><span class="text-accent font-mono mr-2">1.</span>Electron approaches nucleus</div>
+            <div class="interaction-step rounded-xl px-4 py-3"><span class="text-accent font-mono mr-2">2.</span>Virtual photon γ* exchange</div>
+            <div class="interaction-step rounded-xl px-4 py-3"><span class="text-accent font-mono mr-2">3.</span>Electron deflects, nucleus changes state</div>
+            <div class="interaction-step rounded-xl px-4 py-3"><span class="text-accent font-mono mr-2">4.</span>Proton emission from the nucleus</div>
+          </div>
+
+          <p class="text-sm md:text-base text-gray-300 mt-6 leading-relaxed border-l-2 border-accent/35 pl-4">
+            <span class="text-accent font-semibold">Vector-vs-axial:</span> the exchanged <span class="font-mono text-amber-200">γ*</span> is a vector boson, and electron scattering constrains the vector-current half of the neutrino-nucleus interaction puzzle. The weak axial response is the missing term that must be inferred through neutrino data and modeling.
+          </p>
+        </div>
+      </div>
+
       <!-- Key highlights -->
       <div class="reveal grid md:grid-cols-3 gap-8 mt-20">
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
@@ -274,40 +719,48 @@
     </div>
   </section>
 
-  <!-- News Section -->
-  <section id="news" class="relative py-32 px-6 bg-deepblue/30">
+  <!-- Photos Section -->
+  <section id="photos" class="relative py-32 px-6 bg-deepblue/30">
     <div class="max-w-6xl mx-auto">
-      <div class="reveal text-center mb-16">
-        <span class="text-accent font-mono text-sm tracking-widest uppercase mb-4 block">Stay Updated</span>
-        <h2 class="text-4xl md:text-5xl font-bold text-white">Latest News</h2>
+      <div class="reveal text-center mb-14">
+        <span class="text-accent font-mono text-sm tracking-widest uppercase mb-4 block">Collaboration Life</span>
+        <h2 class="text-4xl md:text-5xl font-bold text-white">Photo Carousel</h2>
+        <p class="text-gray-400 mt-4 max-w-2xl mx-auto">
+          Highlights from collaboration meetings, workshops, and shared milestones.
+        </p>
       </div>
-      <div class="reveal grid md:grid-cols-2 gap-8">
-        <article class="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover cursor-pointer">
-          <div class="flex items-center gap-3 mb-4">
-            <span class="text-xs font-mono text-accent/60 tracking-wider uppercase">Collaboration</span>
-            <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-            <span class="text-xs text-gray-600">2025</span>
+      <div class="reveal">
+        <div class="photo-carousel relative mx-auto max-w-5xl rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03]">
+          <div class="photo-track flex transition-transform duration-700 ease-out" data-carousel-track>
+            <figure class="photo-slide w-full shrink-0">
+              <img src="assets/photos/placeholder-0.png" alt="e4nu collaboration placeholder photo 1">
+              <figcaption class="px-6 py-4 text-sm text-gray-300 bg-navy/65">
+                Collaboration placeholder photo 1
+              </figcaption>
+            </figure>
+            <figure class="photo-slide w-full shrink-0">
+              <img src="assets/photos/placeholder-1.png" alt="e4nu collaboration placeholder photo 2">
+              <figcaption class="px-6 py-4 text-sm text-gray-300 bg-navy/65">
+                Collaboration placeholder photo 2
+              </figcaption>
+            </figure>
           </div>
-          <h3 class="text-xl font-semibold text-white group-hover:text-accent transition-colors mb-3">
-            Enhancing International Scientific Collaboration: e4nu's Role
-          </h3>
-          <p class="text-gray-500 text-sm leading-relaxed">
-            The e4nu collaboration continues to expand its international partnerships, bringing together physicists from across the globe to advance our understanding of neutrino-nucleus interactions.
-          </p>
-        </article>
-        <article class="group p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover cursor-pointer">
-          <div class="flex items-center gap-3 mb-4">
-            <span class="text-xs font-mono text-accent/60 tracking-wider uppercase">Events</span>
-            <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-            <span class="text-xs text-gray-600">2025</span>
+          <button type="button" class="carousel-control absolute top-1/2 left-4 -translate-y-1/2 z-10 flex items-center justify-center" data-carousel-prev aria-label="Show previous photo">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+            </svg>
+          </button>
+          <button type="button" class="carousel-control absolute top-1/2 right-4 -translate-y-1/2 z-10 flex items-center justify-center" data-carousel-next aria-label="Show next photo">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+            </svg>
+          </button>
+
+          <div class="absolute bottom-20 sm:bottom-[4.6rem] left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
+            <button type="button" class="carousel-dot active" data-carousel-dot="0" aria-label="View photo 1" aria-current="true"></button>
+            <button type="button" class="carousel-dot" data-carousel-dot="1" aria-label="View photo 2" aria-current="false"></button>
           </div>
-          <h3 class="text-xl font-semibold text-white group-hover:text-accent transition-colors mb-3">
-            Stay Updated: e4nu's Latest News and Events
-          </h3>
-          <p class="text-gray-500 text-sm leading-relaxed">
-            From conference presentations to new analysis results, follow the latest developments from the e4nu collaboration and our upcoming events.
-          </p>
-        </article>
+        </div>
       </div>
     </div>
   </section>
@@ -345,7 +798,7 @@
         <!-- Jefferson Lab -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.jlab.org/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/jlab.png" alt="Jefferson Lab" class="h-16 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            <img src="assets/logos/jlab.png" alt="Jefferson Lab" class="h-16 w-auto opacity-90 drop-shadow-[0_0_5px_rgba(255,255,255,0.9)] group-hover/logo:opacity-100 transition-opacity">
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">Jefferson Lab</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">USA</span>
@@ -407,7 +860,7 @@
         <!-- University of Pittsburgh -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.pitt.edu/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/pitt.png" alt="University of Pittsburgh" class="h-16 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            <img src="assets/logos/pitt2.png" alt="University of Pittsburgh" class="h-16 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">University of Pittsburgh</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">USA</span>
@@ -459,73 +912,159 @@
         <h2 class="text-4xl md:text-5xl font-bold text-white">Publications</h2>
       </div>
 
-      <div class="reveal space-y-6 max-w-4xl mx-auto">
+      <div class="reveal space-y-8 max-w-5xl mx-auto">
 
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover flex gap-6">
-          <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-            <span class="pub-number font-medium">01</span>
+        <!-- Publication 01 -->
+        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
+          <div class="flex gap-6">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+              <span class="pub-number font-medium">01</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-white/90 leading-relaxed mb-1">
+                S. Dytman, M. Betancourt, N. Steinberg, L.B. Weinstein, A. Ashkenazi et al.
+              </p>
+              <a href="https://arxiv.org/abs/2508.01905" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
+                &ldquo;Proton Transparency and Neutrino Physics: New Methods and Modeling&rdquo;
+              </a>
+              <p class="text-sm text-gray-500 font-mono mt-1">
+                arXiv: <a href="https://arxiv.org/abs/2508.01905" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">2508.01905</a> [hep-ex]
+              </p>
+            </div>
           </div>
-          <div>
-            <p class="text-white/90 leading-relaxed mb-2">
-              S. Dytman, M. Betancourt, N. Steinberg, L.B. Weinstein, A. Ashkenazi et al.
-              <span class="text-white font-medium">"Proton Transparency and Neutrino Physics: New Methods and Modeling"</span>
-            </p>
-            <p class="text-sm text-gray-500 font-mono">arXiv: 2508.01905 [hep-ex]</p>
+          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
+            <div class="flex-1">
+              <p class="text-sm text-gray-400 leading-relaxed">
+                New data-driven measurement of proton transparency using CLAS electron&ndash;nucleus scattering on He, C, and Fe targets. Transparency is defined as the ratio of events with a detected proton to quasi-elastic events where a proton should have been knocked out&mdash;avoiding model dependence of earlier extractions. Results are consistent with previous measurements but reveal that GENIE needs improved nuclear ground-state and FSI modeling, particularly at low proton momenta.
+              </p>
+            </div>
+            <a href="https://arxiv.org/abs/2508.01905" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
+              <img src="assets/images/pubs/pub01_transparency.png" alt="Proton transparency vs momentum for He, C, Fe" class="w-full h-full object-cover">
+            </a>
           </div>
         </div>
 
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover flex gap-6">
-          <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-            <span class="pub-number font-medium">02</span>
+        <!-- Publication 02 -->
+        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
+          <div class="flex gap-6">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+              <span class="pub-number font-medium">02</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-white/90 leading-relaxed mb-1">
+                J. Tena Vidal, A. Ashkenazi, L.B. Weinstein, P.G. Blunden, S. Dytman, N. Steinberg
+              </p>
+              <a href="https://arxiv.org/abs/2409.05736" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
+                &ldquo;A universal implementation of radiative effects in neutrino event generators&rdquo;
+              </a>
+              <p class="text-sm text-gray-500 font-mono mt-1">
+                Comput. Phys. Commun. 310 (2025) 109509 &middot;
+                arXiv: <a href="https://arxiv.org/abs/2409.05736" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">2409.05736</a>
+              </p>
+            </div>
           </div>
-          <div>
-            <p class="text-white/90 leading-relaxed mb-2">
-              J. Tena Vidal, Adi Ashkenazi et al.
-              <span class="text-white font-medium">"A universal implementation of radiative effects in neutrino event generators"</span>
-            </p>
-            <p class="text-sm text-gray-500 font-mono">Comput. Phys. Commun. 310 (2025) 109509</p>
-          </div>
-        </div>
-
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover flex gap-6">
-          <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-            <span class="pub-number font-medium">03</span>
-          </div>
-          <div>
-            <p class="text-white/90 leading-relaxed mb-2">
-              A. M. Ankowski et al.
-              <span class="text-white font-medium">"Electron scattering and neutrino physics"</span>
-            </p>
-            <p class="text-sm text-gray-500 font-mono">J. Phys. G: Nucl. Part. Phys. 50 120501</p>
-          </div>
-        </div>
-
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover flex gap-6">
-          <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-            <span class="pub-number font-medium">04</span>
-          </div>
-          <div>
-            <p class="text-white/90 leading-relaxed mb-2">
-              Khachatryan, M., Papadopoulou, A., Ashkenazi, A. et al.
-              <span class="text-white font-medium">"Electron-beam energy reconstruction for neutrino oscillation measurements"</span>
-            </p>
-            <p class="text-sm text-gray-500 font-mono">
-              Nature 599, 565&ndash;570 (2021) &middot;
-              <a href="https://doi.org/10.1038/s41586-021-04046-5" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">doi:10.1038/s41586-021-04046-5</a>
-            </p>
+          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
+            <div class="flex-1">
+              <p class="text-sm text-gray-400 leading-relaxed">
+                Implements QED radiative corrections&mdash;real photon emission by incident and scattered electrons, plus virtual-photon exchange and vacuum polarization&mdash;into neutrino event generators using the extended peaking approximation. Validated within GENIE, the framework enables proper unfolding of radiative effects when benchmarking electron&ndash;nucleus data against generator predictions, closing a long-standing gap in e&ndash;A/&nu;&ndash;A comparisons.
+              </p>
+            </div>
+            <a href="https://arxiv.org/abs/2409.05736" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
+              <img src="assets/images/pubs/pub02_radiative.png" alt="Radiated vs unradiated eGENIE missing energy and momentum" class="w-full h-full object-cover">
+            </a>
           </div>
         </div>
 
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover flex gap-6">
-          <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-            <span class="pub-number font-medium">05</span>
+        <!-- Publication 03 -->
+        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
+          <div class="flex gap-6">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+              <span class="pub-number font-medium">03</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-white/90 leading-relaxed mb-1">
+                A. M. Ankowski et al.
+              </p>
+              <a href="https://arxiv.org/abs/2203.06853" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
+                &ldquo;Electron scattering and neutrino physics&rdquo;
+              </a>
+              <p class="text-sm text-gray-500 font-mono mt-1">
+                J. Phys. G: Nucl. Part. Phys. 50 120501 (2023) &middot;
+                arXiv: <a href="https://arxiv.org/abs/2203.06853" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">2203.06853</a>
+              </p>
+            </div>
           </div>
-          <div>
-            <p class="text-white/90 leading-relaxed mb-2">
-              A. Papadopoulou, A. Ashkenazi, et al.
-              <span class="text-white font-medium">"Inclusive Electron Scattering And The GENIE Neutrino Event Generator"</span>
-            </p>
-            <p class="text-sm text-gray-500 font-mono">Phys. Rev. D 103, 113003 (2021)</p>
+          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
+            <div class="flex-1">
+              <p class="text-sm text-gray-400 leading-relaxed">
+                Comprehensive topical review on how electron&ndash;nucleus scattering data constrain neutrino interaction models across the QE, resonance, DIS, and MEC channels from tens of MeV to several GeV. Outlines the critical role of e&ndash;A measurements in reducing nuclear-interaction systematics for DUNE, Hyper-K, and the broader oscillation program. A community white-paper with 53 authors spanning the e&ndash;A and &nu;&ndash;A fields.
+              </p>
+            </div>
+            <a href="https://arxiv.org/abs/2203.06853" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
+              <img src="assets/images/pubs/pub03_kinematics.png" alt="Kinematic coverage of e-A data on carbon overlaid with DUNE flux" class="w-full h-full object-cover">
+            </a>
+          </div>
+        </div>
+
+        <!-- Publication 04 -->
+        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
+          <div class="flex gap-6">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+              <span class="pub-number font-medium">04</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-white/90 leading-relaxed mb-1">
+                M. Khachatryan, A. Papadopoulou, A. Ashkenazi et al.
+              </p>
+              <a href="https://doi.org/10.1038/s41586-021-04046-5" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
+                &ldquo;Electron-beam energy reconstruction for neutrino oscillation measurements&rdquo;
+              </a>
+              <p class="text-sm text-gray-500 font-mono mt-1">
+                Nature 599, 565&ndash;570 (2021) &middot;
+                <a href="https://doi.org/10.1038/s41586-021-04046-5" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">doi:10.1038/s41586-021-04046-5</a>
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
+            <div class="flex-1">
+              <p class="text-sm text-gray-400 leading-relaxed">
+                Landmark e4&nu; result exploiting the known electron beam energy as a proxy for the unknown neutrino energy to benchmark energy-reconstruction methods on CLAS data (C, Fe targets). Demonstrates that calorimetric reconstruction outperforms QE-based approaches, reducing biases from nuclear effects. Reveals that current neutrino generators mis-reconstruct the incident energy at the few-percent level&mdash;directly relevant for oscillation &delta;<sub>CP</sub> measurements.
+              </p>
+            </div>
+            <a href="https://doi.org/10.1038/s41586-021-04046-5" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
+              <img src="assets/images/pubs/pub04_ereco.png" alt="QE reconstructed energy showing data vs GENIE SuSAv2 and G2018" class="w-full h-full object-cover">
+            </a>
+          </div>
+        </div>
+
+        <!-- Publication 05 -->
+        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
+          <div class="flex gap-6">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+              <span class="pub-number font-medium">05</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-white/90 leading-relaxed mb-1">
+                A. Papadopoulou, A. Ashkenazi et al.
+              </p>
+              <a href="https://arxiv.org/abs/2009.07228" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
+                &ldquo;Inclusive Electron Scattering And The GENIE Neutrino Event Generator&rdquo;
+              </a>
+              <p class="text-sm text-gray-500 font-mono mt-1">
+                Phys. Rev. D 103, 113003 (2021) &middot;
+                arXiv: <a href="https://arxiv.org/abs/2009.07228" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">2009.07228</a>
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
+            <div class="flex-1">
+              <p class="text-sm text-gray-400 leading-relaxed">
+                First systematic test of GENIE&rsquo;s electron-scattering mode against inclusive (e,e&prime;) cross-section data. Incorporates radiative corrections and the SuSAv2-based QE+MEC model into the generator. Shows adequate agreement at lower beam energies but exposes discrepancies in the RES/DIS regime at higher energies, charting the path for improved nuclear modeling in neutrino generators.
+              </p>
+            </div>
+            <a href="https://arxiv.org/abs/2009.07228" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
+              <img src="assets/images/pubs/pub05_inclusive.png" alt="Inclusive C and Fe cross sections comparing GSuSAv2 and G2018 to data" class="w-full h-full object-cover">
+            </a>
           </div>
         </div>
 
@@ -613,7 +1152,7 @@
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-3">
         <span class="text-xl font-bold tracking-tight">
-          <span class="text-accent">e</span><span class="text-white">4</span><span class="text-accent">nu</span>
+          <span class="text-accent">e</span><span class="text-white">4</span><span class="text-accent">ν</span>
         </span>
         <span class="text-gray-600 text-sm">&mdash; Electrons for Neutrinos</span>
       </div>
@@ -673,6 +1212,288 @@
         navbar.classList.remove('bg-navy/95', 'shadow-lg');
       }
     });
+
+    // Collaboration photo carousel
+    const carouselTrack = document.querySelector('[data-carousel-track]');
+    if (carouselTrack) {
+      const carousel = carouselTrack.closest('.photo-carousel');
+      const slides = Array.from(carouselTrack.children);
+      const dots = Array.from(carousel.querySelectorAll('[data-carousel-dot]'));
+      const prevBtn = carousel.querySelector('[data-carousel-prev]');
+      const nextBtn = carousel.querySelector('[data-carousel-next]');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let currentSlide = 0;
+      let autoPlayTimer = null;
+
+      const showSlide = (index) => {
+        currentSlide = (index + slides.length) % slides.length;
+        carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+        dots.forEach((dot, dotIndex) => {
+          const isActive = dotIndex === currentSlide;
+          dot.classList.toggle('active', isActive);
+          dot.setAttribute('aria-current', String(isActive));
+        });
+      };
+
+      const restartAutoPlay = () => {
+        if (autoPlayTimer) {
+          clearInterval(autoPlayTimer);
+        }
+        if (reducedMotion) return;
+        autoPlayTimer = setInterval(() => showSlide(currentSlide + 1), 5500);
+      };
+
+      prevBtn.addEventListener('click', () => {
+        showSlide(currentSlide - 1);
+        restartAutoPlay();
+      });
+
+      nextBtn.addEventListener('click', () => {
+        showSlide(currentSlide + 1);
+        restartAutoPlay();
+      });
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          showSlide(index);
+          restartAutoPlay();
+        });
+      });
+
+      carousel.addEventListener('mouseenter', () => {
+        if (autoPlayTimer) {
+          clearInterval(autoPlayTimer);
+        }
+      });
+
+      carousel.addEventListener('mouseleave', restartAutoPlay);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          if (autoPlayTimer) {
+            clearInterval(autoPlayTimer);
+          }
+          return;
+        }
+        restartAutoPlay();
+      });
+
+      showSlide(0);
+      restartAutoPlay();
+    }
+
+    // ============================================================
+    // CHIPMUNK EASTER EGG — Konami code: ↑↑↓↓←→←→BA
+    // ============================================================
+    (function() {
+      const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+      let konamiIdx = 0;
+      let easterActive = false;
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === KONAMI[konamiIdx]) {
+          konamiIdx++;
+          if (konamiIdx === KONAMI.length) {
+            konamiIdx = 0;
+            if (!easterActive) triggerChipmunkMayhem();
+          }
+        } else {
+          konamiIdx = (e.key === KONAMI[0]) ? 1 : 0;
+        }
+      });
+
+      function triggerChipmunkMayhem() {
+        easterActive = true;
+
+        // ---- audio: chipmunk-pitched melody via Web Audio API ----
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const notes = [523,659,784,1047,784,659,523,659,784,1047,1319,1047,784,1047,1319,1568];
+          let t = ctx.currentTime;
+          notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.type = 'square';
+            osc.frequency.value = freq * 2.2; // chipmunk-shift: pitch way up
+            gain.gain.setValueAtTime(0, t + i * 0.13);
+            gain.gain.linearRampToValueAtTime(0.18, t + i * 0.13 + 0.03);
+            gain.gain.linearRampToValueAtTime(0, t + i * 0.13 + 0.12);
+            osc.start(t + i * 0.13);
+            osc.stop(t + i * 0.13 + 0.13);
+          });
+        } catch(e) {}
+
+        // ---- overlay ----
+        const overlay = document.createElement('div');
+        overlay.id = 'chipmunk-overlay';
+        overlay.style.cssText = `
+          position:fixed;inset:0;z-index:99999;pointer-events:none;overflow:hidden;
+        `;
+        document.body.appendChild(overlay);
+
+        // ---- inject keyframe CSS ----
+        const styleEl = document.createElement('style');
+        styleEl.textContent = `
+          @keyframes chipRun {
+            0%   { transform: translateX(-120px) scaleX(1) rotate(-5deg); opacity:1; }
+            49%  { transform: translateX(calc(100vw + 120px)) scaleX(1) rotate(5deg); opacity:1; }
+            50%  { transform: translateX(calc(100vw + 120px)) scaleX(-1) rotate(-5deg); opacity:1; }
+            99%  { transform: translateX(-120px) scaleX(-1) rotate(5deg); opacity:1; }
+            100% { transform: translateX(-120px) scaleX(1) rotate(-5deg); opacity:1; }
+          }
+          @keyframes chipBounce {
+            0%,100% { top: 10%; }
+            25%     { top: 80%; }
+            50%     { top: 30%; }
+            75%     { top: 60%; }
+          }
+          @keyframes chipSpin {
+            from { transform: rotate(0deg) scale(1); }
+            50%  { transform: rotate(180deg) scale(1.6); }
+            to   { transform: rotate(360deg) scale(1); }
+          }
+          @keyframes chipFall {
+            0%   { top:-80px; opacity:1; }
+            90%  { opacity:1; }
+            100% { top:110vh; opacity:0; }
+          }
+          @keyframes chipPulse {
+            0%,100% { transform:scale(1) rotate(0deg); }
+            25%     { transform:scale(1.4) rotate(-10deg); }
+            75%     { transform:scale(0.8) rotate(10deg); }
+          }
+          @keyframes bannerDrop {
+            0%   { top:-120px; opacity:0; }
+            20%  { top:20px; opacity:1; }
+            70%  { top:20px; opacity:1; }
+            90%  { top:-120px; opacity:0; }
+            100% { top:-120px; opacity:0; }
+          }
+          @keyframes shake {
+            0%,100%{ transform:translate(0,0) rotate(0deg); }
+            10%    { transform:translate(-4px,2px) rotate(-1deg); }
+            20%    { transform:translate(4px,-2px) rotate(1deg); }
+            30%    { transform:translate(-3px,4px) rotate(-0.5deg); }
+            40%    { transform:translate(3px,-3px) rotate(0.5deg); }
+            50%    { transform:translate(-2px,3px) rotate(-1deg); }
+            60%    { transform:translate(2px,-1px) rotate(1deg); }
+            70%    { transform:translate(-3px,2px) rotate(-0.5deg); }
+            80%    { transform:translate(3px,1px) rotate(0.5deg); }
+            90%    { transform:translate(-1px,-2px) rotate(-1deg); }
+          }
+          @keyframes glitch {
+            0%,100% { clip-path: inset(0 0 100% 0); }
+            10%     { clip-path: inset(10% 0 60% 0); }
+            20%     { clip-path: inset(50% 0 20% 0); }
+            30%     { clip-path: inset(20% 0 70% 0); transform: translate(-6px,0); }
+            40%     { clip-path: inset(60% 0 10% 0); transform: translate(6px,0); }
+            50%     { clip-path: inset(30% 0 40% 0); }
+            60%     { clip-path: inset(5% 0 85% 0); transform: translate(-3px,0); }
+            70%     { clip-path: inset(80% 0 5% 0); }
+            80%     { clip-path: inset(0 0 0 0); }
+          }
+          #chip-banner {
+            position:fixed;left:50%;transform:translateX(-50%);
+            background:linear-gradient(135deg,#ff6b00,#ffcc00,#ff6b00);
+            border:4px solid #fff;border-radius:16px;padding:18px 40px;
+            font-family:monospace;font-size:28px;font-weight:900;
+            color:#1a0000;text-align:center;
+            box-shadow:0 0 60px #ff6b00,0 0 120px #ffcc00;
+            animation: bannerDrop 5s ease forwards;
+            z-index:100001;white-space:nowrap;
+          }
+          .chip-cursor-trail {
+            position:fixed;pointer-events:none;z-index:100000;
+            font-size:22px;animation:chipPulse 0.4s ease forwards;
+            transition:none;
+          }
+        `;
+        document.head.appendChild(styleEl);
+
+        // ---- banner ----
+        const banner = document.createElement('div');
+        banner.id = 'chip-banner';
+        banner.innerHTML = '🐿️ 🐿️ 🐿️<br><span style="font-size:14px;letter-spacing:3px;">THE CHIPMUNKS HAVE INFILTRATED e4nu</span>';
+        document.body.appendChild(banner);
+
+        // ---- page shake ----
+        document.body.style.animation = 'shake 0.15s linear 0s 20';
+
+        // ---- running chipmunks across screen ----
+        const chipmunkArt = ['🐿️','🐾','🌰','🐿️','🌰','🐾','🐿️'];
+        for (let i = 0; i < 12; i++) {
+          const chip = document.createElement('div');
+          const topPct = 5 + Math.random() * 85;
+          const dur = 1.2 + Math.random() * 2;
+          const delay = Math.random() * 3;
+          const size = 24 + Math.floor(Math.random() * 48);
+          chip.style.cssText = `
+            position:absolute;font-size:${size}px;top:${topPct}%;left:0;
+            animation: chipRun ${dur}s linear ${delay}s infinite,
+                       chipBounce ${dur * 3}s ease-in-out ${delay}s infinite;
+            z-index:100000;pointer-events:none;filter:drop-shadow(0 0 8px #ffcc00);
+          `;
+          chip.textContent = chipmunkArt[i % chipmunkArt.length];
+          overlay.appendChild(chip);
+        }
+
+        // ---- falling acorns & chipmunks from top ----
+        const fallers = ['🌰','🐿️','🌰','🐾','🌰','🐿️','🌰','🌰'];
+        for (let i = 0; i < 30; i++) {
+          const f = document.createElement('div');
+          const leftPct = Math.random() * 100;
+          const dur = 1.5 + Math.random() * 3;
+          const delay = Math.random() * 5;
+          const size = 16 + Math.floor(Math.random() * 30);
+          f.style.cssText = `
+            position:absolute;font-size:${size}px;left:${leftPct}%;top:-80px;
+            animation: chipFall ${dur}s ease-in ${delay}s infinite;
+            z-index:99998;pointer-events:none;
+          `;
+          f.textContent = fallers[i % fallers.length];
+          overlay.appendChild(f);
+        }
+
+        // ---- spinning giant chipmunk in center ----
+        const bigChip = document.createElement('div');
+        bigChip.style.cssText = `
+          position:fixed;top:50%;left:50%;font-size:160px;
+          transform:translate(-50%,-50%);
+          animation:chipSpin 1.2s linear 0s 4;
+          z-index:100002;pointer-events:none;
+          filter:drop-shadow(0 0 40px #ff6b00) drop-shadow(0 0 80px #ffcc00);
+        `;
+        bigChip.textContent = '🐿️';
+        document.body.appendChild(bigChip);
+
+        // ---- cursor trail ----
+        const trailHandler = (e) => {
+          const t = document.createElement('div');
+          t.className = 'chip-cursor-trail';
+          t.style.left = e.clientX - 12 + 'px';
+          t.style.top  = e.clientY - 12 + 'px';
+          t.textContent = Math.random() < 0.5 ? '🐿️' : '🌰';
+          document.body.appendChild(t);
+          setTimeout(() => t.remove(), 400);
+        };
+        document.addEventListener('mousemove', trailHandler);
+
+        // ---- console message ----
+        console.log('%c🐿️🐿️🐿️  🐿️🐿️🐿️', 'font-size:24px;color:#ff6b00;font-weight:bold;background:#000;padding:8px;');
+        console.log('%c  You found the secret Chipmunk Lab deep inside e4nu.\n  The neutrinos were acorns all along. 🌰🌰🌰', 'font-size:14px;color:#ffcc00;background:#1a0000;padding:4px;');
+
+        // ---- cleanup after 6 seconds ----
+        setTimeout(() => {
+          overlay.remove();
+          banner.remove();
+          bigChip.remove();
+          styleEl.remove();
+          document.body.style.animation = '';
+          document.removeEventListener('mousemove', trailHandler);
+          easterActive = false;
+        }, 6000);
+      }
+    })();
   </script>
 
 </body>
