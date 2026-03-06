@@ -122,60 +122,380 @@
         </div>
       </div>
 
-      <div class="reveal mt-16">
-        <div class="interaction-card rounded-3xl border border-white/10 p-6 md:p-10">
+      <div class="reveal mt-16 about-illustrations" data-about-tabs>
+        <div class="mb-6">
+          <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Electron-Nucleus Interaction</h3>
+          <p class="text-gray-400 mt-2 max-w-3xl">Different reaction channels overlap inside the nucleus. We must model them all!</p>
+        </div>
+        <div class="about-tab-bar" role="tablist" aria-label="About page interaction illustrations">
+          <button type="button" class="about-tab-button is-active" id="about-tab-electron" data-about-tab-button="electron" role="tab" aria-selected="true" aria-controls="about-panel-electron" tabindex="0">Quasielastic (QE)</button>
+          <button type="button" class="about-tab-button" id="about-tab-fsi" data-about-tab-button="fsi" role="tab" aria-selected="false" aria-controls="about-panel-fsi" tabindex="-1">FSI</button>
+          <button type="button" class="about-tab-button" id="about-tab-mec" data-about-tab-button="mec" role="tab" aria-selected="false" aria-controls="about-panel-mec" tabindex="-1">2p2h / MEC</button>
+          <button type="button" class="about-tab-button" id="about-tab-res" data-about-tab-button="res" role="tab" aria-selected="false" aria-controls="about-panel-res" tabindex="-1">RES</button>
+          <button type="button" class="about-tab-button" id="about-tab-dis" data-about-tab-button="dis" role="tab" aria-selected="false" aria-controls="about-panel-dis" tabindex="-1">DIS</button>
+        </div>
+
+        <div class="about-tab-panels mt-6">
+          <section class="about-tab-panel" id="about-panel-electron" data-about-tab-panel="electron" role="tabpanel" aria-labelledby="about-tab-electron">
+            <div class="interaction-card rounded-3xl border border-white/10 p-6 md:p-10">
+              <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div>
+                  <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Quasielastic (QE)</h3>
+                  <p class="text-gray-400 mt-2 max-w-3xl">A stylized view of an <span class="font-mono text-accent">(e,e&apos;p)</span> process: the electron exchanges a virtual photon with the nucleus, is deflected, and a proton can be emitted from the excited nuclear state.</p>
+                </div>
+                <span class="inline-flex items-center self-start px-3 py-1 rounded-full text-xs font-mono tracking-wide text-amber-200 border border-amber-300/40 bg-amber-300/10">Exchanged boson: γ*</span>
+              </div>
+
+              <div class="interaction-phase-list mt-8" aria-label="Quasielastic interaction phases">
+                <div class="interaction-phase-chip"><span class="interaction-phase-index">1.</span>Incoming electron</div>
+                <div class="interaction-phase-chip"><span class="interaction-phase-index">2.</span>Virtual photon exchange</div>
+                <div class="interaction-phase-chip"><span class="interaction-phase-index">3.</span>Deflection and proton knockout</div>
+              </div>
+
+              <div class="interaction-grid interaction-grid-stack mt-8">
+                <div class="interaction-stage rounded-3xl">
+                  <svg class="interaction-svg" viewBox="0 0 860 340" role="img" aria-label="Electron approaches a nucleus, exchanges a virtual photon, is deflected, and the nucleus emits a proton">
+                    <path class="interaction-track electron-in-track" d="M80 180 C170 180 280 178 365 170" />
+                    <path class="interaction-track electron-out-track" d="M365 170 C470 150 610 125 730 90" />
+                    <path class="interaction-track proton-track" d="M430 170 C495 200 570 240 650 282" />
+
+                    <circle class="nucleus-halo" cx="430" cy="170" r="54" fill="rgba(56, 189, 248, 0.2)" />
+                    <circle class="nucleus-shell" cx="430" cy="170" r="37" fill="none" stroke="rgba(125, 211, 252, 0.65)" stroke-width="2.5" />
+                    <circle cx="430" cy="170" r="21" fill="#e2e8f0" opacity="0.92" />
+                    <circle cx="416" cy="164" r="4" fill="#38bdf8" />
+                    <circle cx="438" cy="160" r="4" fill="#f87171" />
+                    <circle cx="426" cy="180" r="4" fill="#38bdf8" />
+                    <circle cx="444" cy="178" r="4" fill="#f87171" />
+
+                    <circle class="interaction-flash" cx="365" cy="170" r="11" fill="rgba(250, 204, 21, 0.75)" />
+                    <path class="gamma-wave" d="M364 170 C378 153 392 187 406 170 C420 153 434 187 448 170" />
+                    <text class="interaction-label gamma-label" x="404" y="147" fill="#fde68a" font-size="15" font-family="JetBrains Mono, monospace">γ*</text>
+
+                    <g class="electron-group">
+                      <circle class="electron-particle" cx="80" cy="180" r="8.5" fill="#7dd3fc" />
+                      <text x="94" y="186" fill="#bae6fd" font-size="14" font-family="JetBrains Mono, monospace">e-</text>
+                    </g>
+
+                    <g class="proton-group">
+                      <circle class="proton-particle" cx="430" cy="170" r="8" fill="#f87171" />
+                      <text x="444" y="176" fill="#fecaca" font-size="14" font-family="JetBrains Mono, monospace">p</text>
+                    </g>
+
+                    <text class="interaction-label excited-label" x="468" y="161" fill="#cbd5e1" font-size="12" font-family="JetBrains Mono, monospace">excited nucleus</text>
+                    <text class="interaction-label deflected-label" x="644" y="76" fill="#93c5fd" font-size="12" font-family="JetBrains Mono, monospace">deflected electron</text>
+                    <text class="interaction-label emitted-label" x="618" y="306" fill="#fca5a5" font-size="12" font-family="JetBrains Mono, monospace">emitted proton</text>
+                  </svg>
+                </div>
+
+                <div class="interaction-copy">
+                  <article class="interaction-panel">
+                    <h4 class="interaction-panel-title"><span class="interaction-index">QE</span>Quasielastic proton knockout</h4>
+                    <p>The incoming lepton transfers momentum to a single bound nucleon through the exchanged <span class="font-mono text-amber-200">γ*</span>. In this sketch the transported hadron remains a proton, producing the canonical electron-plus-proton quasielastic topology.</p>
+                    <div class="interaction-chip-row">
+                      <span class="interaction-chip">Final state: e&apos; + p</span>
+                      <span class="interaction-chip">Vector current only</span>
+                      <span class="interaction-chip">Quasielastic topology</span>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              <p class="text-sm md:text-base text-gray-300 mt-6 leading-relaxed border-l-2 border-accent/35 pl-4">
+                <span class="text-accent font-semibold">Vector-vs-axial:</span> the electromagnetic interaction is purely vector-like, and electron scattering constrains the vector-current half of the neutrino-nucleus interaction puzzle. The weak axial response is the missing term that must be inferred through neutrino data and modeling.
+              </p>
+            </div>
+          </section>
+
+          <section class="about-tab-panel" id="about-panel-fsi" data-about-tab-panel="fsi" role="tabpanel" aria-labelledby="about-tab-fsi" hidden>
+            <div class="interaction-card fsi-card rounded-3xl border border-white/10 p-6 md:p-10" data-fsi-card data-fsi-phase="distortion">
+              <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div>
+                  <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Final-State Interactions (FSI)</h3>
+                  <p class="text-gray-400 mt-2 max-w-3xl">The hard scattering is only the start. As hadrons propagate through the nucleus they can rescatter, exchange charge, or be absorbed before the detector ever sees them.</p>
+                </div>
+                <span class="inline-flex items-center self-start px-3 py-1 rounded-full text-xs font-mono tracking-wide text-rose-100 border border-rose-200/30 bg-rose-200/10">Transport through the nucleus</span>
+              </div>
+
+              <div class="fsi-controls mt-8" aria-label="Final-state interaction scenarios">
+                <button type="button" class="fsi-phase-button is-active" data-fsi-phase-button="distortion" aria-pressed="true" aria-controls="fsi-panel-distortion">a. Kinematic distortion</button>
+                <button type="button" class="fsi-phase-button" data-fsi-phase-button="exchange" aria-pressed="false" aria-controls="fsi-panel-exchange">b. Charge exchange</button>
+                <button type="button" class="fsi-phase-button" data-fsi-phase-button="absorption" aria-pressed="false" aria-controls="fsi-panel-absorption">c. Absorption + knockout</button>
+              </div>
+
+              <div class="fsi-grid mt-6">
+                <div class="fsi-stage rounded-3xl">
+                  <div class="fsi-stage-panel" data-fsi-stage-panel="distortion">
+                    <svg class="fsi-row-svg" viewBox="0 0 520 260" role="img" aria-label="A proton rescattering in the nucleus leaves as a proton but with changed momentum and angle">
+                      <circle class="fsi-medium-halo" cx="176" cy="130" r="104" />
+                      <circle class="fsi-medium-shell" cx="176" cy="130" r="78" />
+                      <circle cx="144" cy="112" r="6.3" fill="#38bdf8" />
+                      <circle cx="183" cy="100" r="6.3" fill="#f87171" />
+                      <circle cx="159" cy="145" r="6.3" fill="#f87171" />
+                      <circle cx="203" cy="138" r="6.3" fill="#38bdf8" />
+                      <circle cx="182" cy="176" r="6.3" fill="#f87171" />
+
+                      <path class="fsi-track-in" d="M110 132 C138 130 164 128 214 132" />
+                      <path class="fsi-track-guide" d="M214 132 C290 132 360 130 440 130" />
+                      <path class="fsi-track-soft" d="M214 132 C286 122 352 104 440 98" />
+                      <circle class="fsi-vertex-flash" cx="214" cy="132" r="10" />
+
+                      <g class="fsi-row1-primary">
+                        <circle class="fsi-particle-proton" cx="110" cy="132" r="8.6" />
+                        <text class="fsi-particle-label" x="124" y="138">p</text>
+                      </g>
+                      <g class="fsi-row1-out">
+                        <circle class="fsi-particle-proton" cx="214" cy="132" r="8.6" />
+                        <text class="fsi-particle-label" x="228" y="138">p</text>
+                      </g>
+
+                      <text class="fsi-stage-caption" x="95" y="236">nuclear medium</text>
+                      <text class="fsi-detector-caption" x="414" y="58">detector</text>
+                      <rect class="fsi-detector-box" x="406" y="72" width="72" height="120" rx="24" />
+                      <circle class="fsi-detector-hit fsi-hit-proton fsi-row1-hit" cx="442" cy="98" r="13" />
+                    </svg>
+                  </div>
+
+                  <div class="fsi-stage-panel" data-fsi-stage-panel="exchange" hidden>
+                    <svg class="fsi-row-svg" viewBox="0 0 520 260" role="img" aria-label="A proton undergoes charge exchange in the nucleus and exits as a neutron">
+                      <circle class="fsi-medium-halo" cx="176" cy="130" r="104" />
+                      <circle class="fsi-medium-shell" cx="176" cy="130" r="78" />
+                      <circle cx="144" cy="112" r="6.3" fill="#38bdf8" />
+                      <circle cx="183" cy="100" r="6.3" fill="#f87171" />
+                      <circle cx="159" cy="145" r="6.3" fill="#f87171" />
+                      <circle cx="203" cy="138" r="6.3" fill="#38bdf8" />
+                      <circle cx="182" cy="176" r="6.3" fill="#f87171" />
+
+                      <path class="fsi-track-in" d="M110 132 C138 130 164 128 214 132" />
+                      <path class="fsi-track-neutron-out" d="M214 132 C292 130 362 131 440 132" />
+                      <circle class="fsi-conversion-flash" cx="214" cy="132" r="10" />
+
+                      <g class="fsi-row2-primary">
+                        <circle class="fsi-particle-proton" cx="110" cy="132" r="8.6" />
+                        <text class="fsi-particle-label" x="124" y="138">p</text>
+                      </g>
+                      <g class="fsi-row2-out">
+                        <circle class="fsi-particle-neutron" cx="214" cy="132" r="8.6" />
+                        <text class="fsi-particle-label" x="228" y="138">n</text>
+                      </g>
+
+                      <text class="fsi-stage-caption" x="95" y="236">nuclear medium</text>
+                      <text class="fsi-detector-caption" x="414" y="58">detector</text>
+                      <rect class="fsi-detector-box" x="406" y="72" width="72" height="120" rx="24" />
+                      <circle class="fsi-detector-hit fsi-hit-neutron fsi-row2-hit" cx="442" cy="132" r="13" />
+                    </svg>
+                  </div>
+
+                  <div class="fsi-stage-panel" data-fsi-stage-panel="absorption" hidden>
+                    <svg class="fsi-row-svg" viewBox="0 0 520 260" role="img" aria-label="A pion produced inside the nucleus is absorbed before escape and its energy is redistributed to two outgoing nucleons">
+                      <circle class="fsi-medium-halo" cx="176" cy="130" r="104" />
+                      <circle class="fsi-medium-shell" cx="176" cy="130" r="78" />
+                      <circle cx="144" cy="112" r="6.3" fill="#38bdf8" />
+                      <circle cx="183" cy="100" r="6.3" fill="#f87171" />
+                      <circle cx="159" cy="145" r="6.3" fill="#f87171" />
+                      <circle cx="203" cy="138" r="6.3" fill="#38bdf8" />
+                      <circle cx="182" cy="176" r="6.3" fill="#f87171" />
+
+                      <circle class="fsi-production-flash" cx="174" cy="130" r="9" />
+                      <path class="fsi-track-pion" d="M174 130 C192 136 210 148 232 164" />
+                      <circle class="fsi-absorption-flash" cx="232" cy="164" r="11" />
+                      <path class="fsi-track-knockout-a" d="M232 164 C294 148 356 122 440 104" />
+                      <path class="fsi-track-knockout-b" d="M232 164 C294 178 356 188 440 164" />
+
+                      <g class="fsi-row3-pion">
+                        <circle class="fsi-particle-pion" cx="174" cy="130" r="8.2" />
+                        <text class="fsi-particle-label" x="188" y="136">π</text>
+                      </g>
+                      <g class="fsi-row3-knockout-a">
+                        <circle class="fsi-particle-proton" cx="232" cy="164" r="8.4" />
+                        <text class="fsi-particle-label" x="246" y="170">p</text>
+                      </g>
+                      <g class="fsi-row3-knockout-b">
+                        <circle class="fsi-particle-neutron" cx="232" cy="164" r="8.4" />
+                        <text class="fsi-particle-label" x="246" y="170">n</text>
+                      </g>
+
+                      <text class="fsi-stage-caption" x="95" y="236">nuclear medium</text>
+                      <text class="fsi-detector-caption" x="414" y="58">detector</text>
+                      <rect class="fsi-detector-box" x="406" y="64" width="72" height="128" rx="24" />
+                      <circle class="fsi-detector-hit fsi-hit-proton fsi-row3-hit-a" cx="442" cy="104" r="12.5" />
+                      <circle class="fsi-detector-hit fsi-hit-neutron fsi-row3-hit-b" cx="442" cy="164" r="12.5" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="fsi-copy">
+                  <article class="fsi-panel" id="fsi-panel-distortion" data-fsi-panel="distortion">
+                    <h4 class="fsi-copy-title"><span class="fsi-index">a.</span>Kinematic distortion</h4>
+                    <p>Rescattering can leave the outgoing proton as a proton, but with lower momentum and a different exit angle. The event can still look <span class="font-mono text-accent">1p</span>-like even though the measured kinematics no longer match the primary interaction vertex.</p>
+                    <div class="fsi-chip-row">
+                      <span class="fsi-chip">Detected: p</span>
+                      <span class="fsi-chip">Identity preserved</span>
+                      <span class="fsi-chip">Momentum and angle shifted</span>
+                    </div>
+                  </article>
+
+                  <article class="fsi-panel" id="fsi-panel-exchange" data-fsi-panel="exchange" hidden>
+                    <h4 class="fsi-copy-title"><span class="fsi-index">b.</span>Charge exchange</h4>
+                    <p>A hadron can swap charge while it propagates through the medium. In this example the struck proton leaves as a neutron, so the particle species seen by the detector no longer matches the species produced at the primary vertex.</p>
+                    <div class="fsi-chip-row">
+                      <span class="fsi-chip">Primary hadron: p</span>
+                      <span class="fsi-chip">Detected: n</span>
+                      <span class="fsi-chip">Species changed by FSI</span>
+                    </div>
+                  </article>
+
+                  <article class="fsi-panel" id="fsi-panel-absorption" data-fsi-panel="absorption" hidden>
+                    <h4 class="fsi-copy-title"><span class="fsi-index">c.</span>Absorption plus knockout</h4>
+                    <p>A pion produced at the primary interaction can be absorbed on nearby nucleons before it escapes the nucleus. Its energy is then redistributed to those nucleons, which can emerge as extra knocked-out particles, so the detector sees additional nucleons and no outgoing pion.</p>
+                    <div class="fsi-chip-row">
+                      <span class="fsi-chip">Produced in medium: π</span>
+                      <span class="fsi-chip">Detected: p + n</span>
+                      <span class="fsi-chip">Absorbed before escape</span>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              <p class="text-sm md:text-base text-gray-300 mt-6 leading-relaxed border-l-2 border-rose-200/25 pl-4">
+                <span class="text-rose-100 font-semibold">Detector consequence:</span> the measured final state is a transported final state, not a pristine snapshot of the primary vertex. Topology, multiplicity, and reconstructed kinematics all depend on intranuclear transport.
+              </p>
+            </div>
+          </section>
+
+          <section class="about-tab-panel" id="about-panel-mec" data-about-tab-panel="mec" role="tabpanel" aria-labelledby="about-tab-mec" hidden>
+            <div class="interaction-card mec-card rounded-3xl border border-white/10 p-6 md:p-10" data-mec-phase="pair">
           <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Electron-Nucleus Interaction</h3>
-              <p class="text-gray-400 mt-2 max-w-3xl">A stylized view of an <span class="font-mono text-accent">(e,e&apos;p)</span> process: the electron exchanges a virtual photon with the nucleus, is deflected, and a proton can be emitted from the excited nuclear state.</p>
+              <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">2p2h / MEC</h3>
+              <p class="text-gray-400 mt-2 max-w-3xl">A stylized multinucleon interaction: the exchanged virtual photon couples to a shared two-body current inside the nucleus, and the transferred momentum can knock out two nucleons instead of one.</p>
             </div>
-            <span class="inline-flex items-center self-start px-3 py-1 rounded-full text-xs font-mono tracking-wide text-amber-200 border border-amber-300/40 bg-amber-300/10">Exchanged boson: γ*</span>
+            <div class="flex flex-wrap gap-2 text-xs font-mono tracking-wide">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-emerald-100 border border-emerald-200/30 bg-emerald-200/10">2 particles + 2 holes</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-amber-100 border border-amber-200/30 bg-amber-200/10">MEC is one mechanism</span>
+            </div>
           </div>
 
-          <div class="interaction-stage rounded-2xl mt-8">
-            <svg class="interaction-svg" viewBox="0 0 860 340" role="img" aria-label="Electron approaches a nucleus, exchanges a virtual photon, is deflected, and the nucleus emits a proton">
-              <path class="interaction-track electron-in-track" d="M80 180 C170 180 280 178 365 170" />
-              <path class="interaction-track electron-out-track" d="M365 170 C470 150 610 125 730 90" />
-              <path class="interaction-track proton-track" d="M430 170 C495 200 570 240 650 282" />
-
-              <circle class="nucleus-halo" cx="430" cy="170" r="54" fill="rgba(56, 189, 248, 0.2)" />
-              <circle class="nucleus-shell" cx="430" cy="170" r="37" fill="none" stroke="rgba(125, 211, 252, 0.65)" stroke-width="2.5" />
-              <circle cx="430" cy="170" r="21" fill="#e2e8f0" opacity="0.92" />
-              <circle cx="416" cy="164" r="4" fill="#38bdf8" />
-              <circle cx="438" cy="160" r="4" fill="#f87171" />
-              <circle cx="426" cy="180" r="4" fill="#38bdf8" />
-              <circle cx="444" cy="178" r="4" fill="#f87171" />
-
-              <circle class="interaction-flash" cx="365" cy="170" r="11" fill="rgba(250, 204, 21, 0.75)" />
-              <path class="gamma-wave" d="M364 170 C378 153 392 187 406 170 C420 153 434 187 448 170" />
-              <text class="interaction-label gamma-label" x="404" y="147" fill="#fde68a" font-size="15" font-family="JetBrains Mono, monospace">γ*</text>
-
-              <g class="electron-group">
-                <circle class="electron-particle" cx="80" cy="180" r="8.5" fill="#7dd3fc" />
-                <text x="94" y="186" fill="#bae6fd" font-size="14" font-family="JetBrains Mono, monospace">e-</text>
-              </g>
-
-              <g class="proton-group">
-                <circle class="proton-particle" cx="430" cy="170" r="8" fill="#f87171" />
-                <text x="444" y="176" fill="#fecaca" font-size="14" font-family="JetBrains Mono, monospace">p</text>
-              </g>
-
-              <text class="interaction-label excited-label" x="468" y="161" fill="#cbd5e1" font-size="12" font-family="JetBrains Mono, monospace">excited nucleus</text>
-              <text class="interaction-label deflected-label" x="644" y="76" fill="#93c5fd" font-size="12" font-family="JetBrains Mono, monospace">deflected electron</text>
-              <text class="interaction-label emitted-label" x="618" y="306" fill="#fca5a5" font-size="12" font-family="JetBrains Mono, monospace">emitted proton</text>
-            </svg>
+          <div class="mec-controls mt-8" aria-label="2p2h / MEC interaction phases">
+            <button type="button" class="mec-phase-button is-active" data-mec-phase-button="pair" aria-pressed="true">1. Pair in nucleus</button>
+            <button type="button" class="mec-phase-button" data-mec-phase-button="exchange" aria-pressed="false">2. Shared current</button>
+            <button type="button" class="mec-phase-button" data-mec-phase-button="knockout" aria-pressed="false">3. Two-nucleon knockout</button>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-6 text-sm">
-            <div class="interaction-step rounded-xl px-4 py-3"><span class="text-accent font-mono mr-2">1.</span>Electron approaches nucleus</div>
-            <div class="interaction-step rounded-xl px-4 py-3"><span class="text-accent font-mono mr-2">2.</span>Virtual photon γ* exchange</div>
-            <div class="interaction-step rounded-xl px-4 py-3"><span class="text-accent font-mono mr-2">3.</span>Electron deflects, nucleus changes state</div>
-            <div class="interaction-step rounded-xl px-4 py-3"><span class="text-accent font-mono mr-2">4.</span>Proton emission from the nucleus</div>
+          <div class="mec-grid mt-6">
+            <div class="mec-stage rounded-3xl">
+              <canvas class="mec-canvas" role="img" aria-label="Electron scattering from a shared two-body current inside the nucleus ejects two nucleons"></canvas>
+            </div>
+
+            <div class="mec-copy">
+              <article class="mec-panel">
+                <h4 class="mec-panel-title"><span class="mec-index">MEC</span>Shared current to two-nucleon knockout</h4>
+                <p>A correlated nucleon pair in the nucleus can absorb the exchanged <span class="font-mono text-amber-200">γ*</span> through a shared two-body current, so the transferred momentum is distributed across the pair rather than deposited on one isolated nucleon.</p>
+                <p class="mt-4">As the interaction develops, both nucleons can be ejected and the residual system is left with two holes. That 2p2h topology is one reason multinucleon dynamics matter for neutrino-energy reconstruction and detector-level event classification.</p>
+                <div class="mec-chip-row">
+                  <span class="mec-chip">Illustration: p + n pair</span>
+                  <span class="mec-chip">Two-body current</span>
+                  <span class="mec-chip">2 nucleons ejected</span>
+                  <span class="mec-chip">2 holes in residual nucleus</span>
+                </div>
+              </article>
+            </div>
           </div>
 
-          <p class="text-sm md:text-base text-gray-300 mt-6 leading-relaxed border-l-2 border-accent/35 pl-4">
-            <span class="text-accent font-semibold">Vector-vs-axial:</span> the exchanged <span class="font-mono text-amber-200">γ*</span> is a vector boson, and electron scattering constrains the vector-current half of the neutrino-nucleus interaction puzzle. The weak axial response is the missing term that must be inferred through neutrino data and modeling.
+          <p class="text-sm md:text-base text-gray-300 mt-6 leading-relaxed border-l-2 border-emerald-200/25 pl-4">
+            <span class="text-emerald-100 font-semibold">Terminology note:</span> <span class="font-mono text-emerald-200">2p2h</span> names the final state, while <span class="font-mono text-amber-200">MEC</span> names one mechanism that can produce it. Correlations, interference terms, and later FSI can overlap with the same detector topology.
           </p>
+            </div>
+          </section>
+
+          <section class="about-tab-panel" id="about-panel-res" data-about-tab-panel="res" role="tabpanel" aria-labelledby="about-tab-res" hidden>
+            <div class="interaction-card res-card rounded-3xl border border-white/10 p-6 md:p-10" data-res-phase="approach">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Resonant Pion Production (RES)</h3>
+              <p class="text-gray-400 mt-2 max-w-3xl">A stylized resonance interaction: the exchanged virtual photon excites the struck proton to the &Delta;(1232) baryon resonance, which decays almost instantly into a nucleon and a pion.</p>
+            </div>
+            <div class="flex flex-wrap gap-2 text-xs font-mono tracking-wide">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-purple-100 border border-purple-200/30 bg-purple-200/10">&Delta;(1232) resonance</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-amber-100 border border-amber-200/30 bg-amber-200/10">dominant inelastic channel</span>
+            </div>
+          </div>
+
+          <div class="res-controls mt-8" aria-label="RES interaction phases">
+            <button type="button" class="res-phase-button is-active" data-res-phase-button="approach" aria-pressed="true">1. Electron approaches</button>
+            <button type="button" class="res-phase-button" data-res-phase-button="resonance" aria-pressed="false">2. Resonance excitation</button>
+            <button type="button" class="res-phase-button" data-res-phase-button="decay" aria-pressed="false">3. Resonance decay</button>
+          </div>
+
+          <div class="res-grid mt-6">
+            <div class="res-stage rounded-3xl">
+              <canvas class="res-canvas" role="img" aria-label="Electron excites a proton to the Delta(1232) resonance, which decays to a neutron and pion"></canvas>
+            </div>
+
+            <div class="res-copy">
+              <article class="res-panel">
+                <h4 class="res-panel-title"><span class="res-index">RES</span>&Delta;(1232) excitation and decay</h4>
+                <p>An incoming electron transfers enough energy to push a bound proton out of the quasielastic region and into the resonance spectrum. In this stylized example, the exchanged <span class="font-mono text-amber-200">&gamma;*</span> excites the proton to the <span class="font-mono text-amber-200">&Delta;&#x207A;(1232)</span>, the dominant low-lying baryon resonance.</p>
+                <p class="mt-4">That resonance is short-lived and decays through the strong interaction into a neutron and a <span class="font-mono text-purple-200">&pi;&#x207A;</span>. The detector therefore sees an inelastic final state with three outgoing particles while the residual nucleus is left with one hole.</p>
+                <div class="res-chip-row">
+                  <span class="res-chip">Target: proton in nucleus</span>
+                  <span class="res-chip">&Delta;(1232) resonance</span>
+                  <span class="res-chip">Decay: n + &pi;<sup>+</sup></span>
+                  <span class="res-chip">1 hole in residual nucleus</span>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <p class="text-sm md:text-base text-gray-300 mt-6 leading-relaxed border-l-2 border-purple-200/25 pl-4">
+            <span class="text-purple-100 font-semibold">Note:</span> RES is the dominant inelastic channel in the few-GeV region. Final-state interactions can absorb, scatter, or charge-exchange the pion before it escapes the nucleus, altering the detected topology.
+          </p>
+            </div>
+          </section>
+
+          <section class="about-tab-panel" id="about-panel-dis" data-about-tab-panel="dis" role="tabpanel" aria-labelledby="about-tab-dis" hidden>
+            <div class="interaction-card dis-card rounded-3xl border border-white/10 p-6 md:p-10" data-dis-phase="approach">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Deep Inelastic Scattering (DIS)</h3>
+              <p class="text-gray-400 mt-2 max-w-3xl">At high Q&sup2; the virtual photon resolves the quark substructure of the nucleon, strikes a single quark, and a color string stretches back to the remnant diquark before fragmenting into hadrons.</p>
+            </div>
+            <div class="flex flex-wrap gap-2 text-xs font-mono tracking-wide">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-cyan-100 border border-cyan-200/30 bg-cyan-200/10">W&sup2; &gt; 4 GeV&sup2;</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-teal-100 border border-teal-200/30 bg-teal-200/10">hadronization</span>
+            </div>
+          </div>
+
+          <div class="dis-controls mt-8" aria-label="DIS interaction phases">
+            <button type="button" class="dis-phase-button is-active" data-dis-phase-button="approach" aria-pressed="true">1. Quark substructure</button>
+            <button type="button" class="dis-phase-button" data-dis-phase-button="scatter" aria-pressed="false">2. Hard scatter</button>
+            <button type="button" class="dis-phase-button" data-dis-phase-button="hadronize" aria-pressed="false">3. Hadronization</button>
+          </div>
+
+          <div class="dis-grid mt-6">
+            <div class="dis-stage rounded-3xl">
+              <canvas class="dis-canvas" role="img" aria-label="Deep inelastic scattering: virtual photon strikes a quark, a color string stretches to the remnant diquark, and hadrons form from string breaks"></canvas>
+            </div>
+
+            <div class="dis-copy">
+              <article class="dis-panel">
+                <h4 class="dis-panel-title"><span class="dis-index">DIS</span>Hard scatter to hadronization</h4>
+                <p>At high Q<sup>2</sup>, the virtual photon resolves the nucleon into quarks and strikes one parton directly. The outgoing quark separates from the colored remnant diquark, a short parton shower develops, and a color flux tube stretches between the two ends of the system.</p>
+                <p class="mt-4">As that string elongates it breaks through q<span style="text-decoration:overline">q</span> pair creation, producing a hadronic spray along the jet direction plus a remnant-side baryon. The residual nucleus is again left with one hole, and later FSI can still reshape the observed final state.</p>
+                <div class="dis-chip-row">
+                  <span class="dis-chip">3 valence quarks</span>
+                  <span class="dis-chip">Struck quark + remnant diquark</span>
+                  <span class="dis-chip">String breaking</span>
+                  <span class="dis-chip">Jet hadrons + remnant baryon</span>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <p class="text-sm md:text-base text-gray-300 mt-6 leading-relaxed border-l-2 border-cyan-200/25 pl-4">
+            <span class="text-cyan-100 font-semibold">Note:</span> DIS dominates at W&sup2;&nbsp;&gt;&nbsp;4&nbsp;GeV&sup2;. Final-state interactions can modify the hadron jet before particles escape the nucleus, altering both multiplicities and kinematics.
+          </p>
+            </div>
+          </section>
         </div>
       </div>
 
@@ -658,6 +978,19 @@
     </div>
   </footer>
 
+  <script src="assets/js/app.js" defer></script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/lib/dom.js" defer></script>
+  <script src="assets/js/lib/timers.js" defer></script>
+  <script src="assets/js/features/particles.js" defer></script>
+  <script src="assets/js/features/reveal.js" defer></script>
+  <script src="assets/js/features/navigation.js" defer></script>
+  <script src="assets/js/features/carousel.js" defer></script>
+  <script src="assets/js/features/about-tabs.js" defer></script>
+  <script src="assets/js/features/mec.js" defer></script>
+  <script src="assets/js/features/res.js" defer></script>
+  <script src="assets/js/features/dis.js" defer></script>
+  <script src="assets/js/features/chipmunk.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 
 </body>

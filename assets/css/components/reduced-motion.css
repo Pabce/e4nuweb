@@ -1,0 +1,93 @@
+@media (prefers-reduced-motion: reduce) {
+  .electron-group,
+  .gamma-wave,
+  .interaction-flash,
+  .nucleus-halo,
+  .nucleus-shell,
+  .proton-group,
+  .interaction-label,
+  .interaction-step,
+  .electron-out-track,
+  .proton-track,
+  .fsi-medium-halo,
+  .fsi-medium-shell,
+  .fsi-vertex-flash,
+  .fsi-conversion-flash,
+  .fsi-production-flash,
+  .fsi-absorption-flash,
+  .fsi-row1-primary,
+  .fsi-row1-out,
+  .fsi-row2-primary,
+  .fsi-row2-out,
+  .fsi-row3-pion,
+  .fsi-row3-knockout-a,
+  .fsi-row3-knockout-b,
+  .fsi-track-soft,
+  .fsi-track-neutron-out,
+  .fsi-track-pion,
+  .fsi-track-knockout-a,
+  .fsi-track-knockout-b,
+  .fsi-row1-hit,
+  .fsi-row2-hit,
+  .fsi-row3-hit-a,
+  .fsi-row3-hit-b {
+    animation: none !important;
+  }
+  .electron-group,
+  .proton-group {
+    opacity: 1;
+  }
+  .interaction-label {
+    opacity: 1;
+  }
+  .fsi-track-soft,
+  .fsi-track-neutron-out,
+  .fsi-track-pion,
+  .fsi-track-knockout-a,
+  .fsi-track-knockout-b,
+  .fsi-vertex-flash,
+  .fsi-conversion-flash,
+  .fsi-absorption-flash,
+  .fsi-row1-hit,
+  .fsi-row2-hit,
+  .fsi-row3-hit-a,
+  .fsi-row3-hit-b {
+    opacity: 1;
+  }
+  .fsi-production-flash,
+  .fsi-row1-primary,
+  .fsi-row2-primary,
+  .fsi-row3-pion {
+    opacity: 0;
+  }
+  .fsi-row1-out {
+    opacity: 1;
+    transform: translate(226px, -34px);
+  }
+  .fsi-row2-out {
+    opacity: 1;
+    transform: translate(226px, 0px);
+  }
+  .fsi-row3-knockout-a {
+    opacity: 1;
+    transform: translate(208px, -60px);
+  }
+  .fsi-row3-knockout-b {
+    opacity: 1;
+    transform: translate(208px, 0px);
+  }
+  .fsi-row1-hit,
+  .fsi-row2-hit,
+  .fsi-row3-hit-a,
+  .fsi-row3-hit-b {
+    transform: scale(1);
+  }
+  .mec-phase-button,
+  .res-phase-button,
+  .dis-phase-button {
+    transition: none !important;
+  }
+  .photo-track {
+    transition: none !important;
+  }
+}
