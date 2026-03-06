@@ -1204,6 +1204,10 @@
 
       var vis = new DisVis(canvas, reduced);
       var idx = 0;
+      var hovered = false;
+      var focusWithin = false;
+      var pauseSuppressed = false;
+      var pauseSuppressionTimer = null;
 
       function advancePhase() {
         idx = (idx + 1) % app.config.DIS_PHASES.length;
@@ -1246,6 +1250,32 @@
         auto.start();
       }
 
+      function suppressPauseForCycle() {
+        pauseSuppressed = true;
+        if (pauseSuppressionTimer) {
+          window.clearTimeout(pauseSuppressionTimer);
+        }
+        pauseSuppressionTimer = window.setTimeout(function () {
+          pauseSuppressed = false;
+          pauseSuppressionTimer = null;
+          if (hovered || focusWithin) {
+            auto.stop();
+          }
+        }, app.config.DIS_AUTOPLAY_MS);
+      }
+
+      function pauseForInteraction() {
+        if (!pauseSuppressed) {
+          auto.stop();
+        }
+      }
+
+      function startFromBeginning() {
+        apply(app.config.DIS_PHASES[0], true);
+        suppressPauseForCycle();
+        restart(true);
+      }
+
       btns.forEach(function (b) {
         b.addEventListener('click', function () {
           apply(b.dataset.disPhaseButton, false);
@@ -1253,20 +1283,28 @@
         });
       });
       block.addEventListener('abouttabactivate', function () {
-        apply(app.config.DIS_PHASES[0], true);
-        restart(true);
+        startFromBeginning();
       });
-      block.addEventListener('mouseenter', auto.stop);
+      block.addEventListener('mouseenter', function () {
+        hovered = true;
+        pauseForInteraction();
+      });
       block.addEventListener('mouseleave', function () {
+        hovered = false;
         restart(false);
       });
-      block.addEventListener('focusin', auto.stop);
+      block.addEventListener('focusin', function () {
+        focusWithin = true;
+        pauseForInteraction();
+      });
       block.addEventListener('focusout', function (e) {
-        if (!e.relatedTarget || !block.contains(e.relatedTarget)) restart(false);
+        if (!e.relatedTarget || !block.contains(e.relatedTarget)) {
+          focusWithin = false;
+          restart(false);
+        }
       });
 
-      apply(app.config.DIS_PHASES[0], true);
-      restart(true);
+      startFromBeginning();
     });
   }
 
