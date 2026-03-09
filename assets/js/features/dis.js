@@ -2,9 +2,11 @@
   'use strict';
 
   var TAU = Math.PI * 2;
-  var PHASE_TRANSITION_SECONDS = 1.7;
   var prefersReducedMotion = app.lib.dom.prefersReducedMotion;
-  var createIntervalController = app.lib.timers.createIntervalController;
+  var createPhaseLoop = app.lib.phaseLoop.createPhaseLoop;
+  var getLoopEndProgress = app.lib.phaseLoop.getLoopEndProgress;
+  var getPhaseWindowStart = app.lib.phaseLoop.getPhaseWindowStart;
+  var getWindowState = app.lib.phaseLoop.getWindowState;
 
   /* ── colour palette ── */
   var P = {
@@ -135,6 +137,7 @@
       e: { x: 58, y: 208 },
       qStruck: { x: STRUCK_BASE.x, y: STRUCK_BASE.y },
       remnantPos: { x: 452, y: 214 },
+      eAlpha: 1,
       photon: 0,
       vertex: 0,
       quarks: 1,
@@ -155,6 +158,7 @@
       e: { x: 305, y: 200 },
       qStruck: { x: 522, y: 160 },
       remnantPos: { x: 460, y: 220 },
+      eAlpha: 1,
       photon: 1,
       vertex: 1,
       quarks: 1,
@@ -175,6 +179,7 @@
       e: { x: 830, y: 72 },
       qStruck: { x: 812, y: 150 },
       remnantPos: { x: 468, y: 222 },
+      eAlpha: 1,
       photon: 0,
       vertex: 0,
       quarks: 0.14,
@@ -218,6 +223,7 @@
       e: lerpXY(a.e, b.e, t),
       qStruck: lerpXY(a.qStruck, b.qStruck, t),
       remnantPos: lerpXY(a.remnantPos, b.remnantPos, t),
+      eAlpha: lerp(a.eAlpha, b.eAlpha, t),
       photon: lerp(a.photon, b.photon, t),
       vertex: lerp(a.vertex, b.vertex, t),
       quarks: lerp(a.quarks, b.quarks, t),
@@ -313,13 +319,10 @@
     this.ctx = cvs.getContext('2d');
     this.reduced = reduced;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.from = TGT.approach;
-    this.to = TGT.approach;
-    this.prog = 1;
     this.t = 0;
     this.nucs = scatterNucleons();
-    this.alive = true;
     this._ts = 0;
+    this.state = lerpS(TGT.approach, TGT.approach, 0);
     this._sqPos = { x: STRUCK_BASE.x, y: STRUCK_BASE.y };
 
     var self = this;
@@ -328,9 +331,6 @@
     };
     window.addEventListener('resize', this._onR);
     this._size();
-    requestAnimationFrame(function (ts) {
-      self._tick(ts);
-    });
   }
 
   DisVis.prototype._size = function () {
@@ -341,12 +341,6 @@
     this.cvs.style.width = w + 'px';
     this.cvs.style.height = h + 'px';
     this.sc = (w * this.dpr) / LW;
-  };
-
-  DisVis.prototype.setPhase = function (p) {
-    this.from = this._st();
-    this.to = TGT[p];
-    this.prog = 0;
   };
 
   /* ── compute struck-quark visual position (orbit fades as it separates) ── */
@@ -363,105 +357,131 @@
     };
   };
 
-  DisVis.prototype._st = function () {
-    var raw = Math.min(1, this.prog);
-    var t = ease(raw);
-    var s = lerpS(this.from, this.to, t);
-    var dPhoton = this.to.photon - this.from.photon;
+  function copyState(state) {
+    return lerpS(state, state, 0);
+  };
 
-    s._stretch = s.string;
-    s._endForm = s.breaks;
-    s._midForm = s.breaks;
-    s._release = s.hadrons;
+  DisVis.prototype._sampleScatter = function (raw) {
+    var from = TGT.approach;
+    var to = TGT.scatter;
+    var s = lerpS(from, to, ease(raw));
+    var tPos = ease(remap(raw, 0, 0.62));
+    var tInt = ease(remap(raw, 0.42, 0.9));
+    var tStr = ease(remap(raw, 0.5, 0.95));
 
-    if (Math.abs(dPhoton) < 0.01) {
-      return s;
-    }
-
-    if (dPhoton > 0) {
-      var tPos = ease(remap(raw, 0, 0.62));
-      var tInt = ease(remap(raw, 0.42, 0.9));
-      var tStr = ease(remap(raw, 0.5, 0.95));
-
-      s.e = lerpXY(this.from.e, this.to.e, tPos);
-      s.photon = lerp(this.from.photon, this.to.photon, tInt);
-      s.vertex = lerp(this.from.vertex, this.to.vertex, tInt);
-      s.qStruck = lerpXY(this.from.qStruck, this.to.qStruck, tStr);
-      s.remnantPos = lerpXY(this.from.remnantPos, this.to.remnantPos, tStr);
-      s.remnant = lerp(this.from.remnant, this.to.remnant, tStr);
-      s.string = lerp(this.from.string, this.to.string, tStr);
-      s.shower = lerp(this.from.shower, this.to.shower, tStr);
-      s.tracks = lerp(this.from.tracks, this.to.tracks, tInt);
-      s.labScatter = lerp(this.from.labScatter, this.to.labScatter, tInt);
-      s.labHadronize = lerp(this.from.labHadronize, this.to.labHadronize, tInt);
-      return s;
-    }
-
-    if (this.to.hadrons > 0.5) {
-      var tFade = ease(remap(raw, 0.08, 0.34));
-      var tStretch = ease(remap(raw, 0.12, 0.44));
-      var tEnds = ease(remap(raw, 0.34, 0.6));
-      var tMid = ease(remap(raw, 0.54, 0.8));
-      var tRelease = ease(remap(raw, 0.72, 1.0));
-      var tQ = ease(remap(raw, 0.18, 0.68));
-      var tE = ease(remap(raw, 0.5, 1.0));
-
-      s.photon = lerp(this.from.photon, 0, tFade);
-      s.vertex = lerp(this.from.vertex, 0, tFade);
-      s.shower = lerp(this.from.shower, 0, tFade);
-      s.e = lerpXY(this.from.e, this.to.e, tE);
-      s.qStruck = lerpXY(this.from.qStruck, this.to.qStruck, tQ);
-      s.remnantPos = lerpXY(this.from.remnantPos, this.to.remnantPos, tStretch);
-      s.remnant = lerp(this.from.remnant, 1, tStretch);
-      s.quarks = lerp(this.from.quarks, this.to.quarks, ease(remap(raw, 0.12, 0.48)));
-      s.string = lerp(this.from.string, 1, tStretch) * (1 - 0.58 * tRelease);
-      s.hadrons = lerp(this.from.hadrons, 1, Math.max(tEnds, tMid));
-      s.breaks = lerp(this.from.breaks, 1, Math.max(tEnds, tMid));
-      s.jetEnvelope = lerp(this.from.jetEnvelope, 1, ease(remap(raw, 0.62, 0.94)));
-      s.tracks = lerp(this.from.tracks, this.to.tracks, ease(remap(raw, 0.62, 1.0)));
-      s.detector = lerp(this.from.detector, this.to.detector, ease(remap(raw, 0.78, 1.0)));
-      s.holes = lerp(this.from.holes, this.to.holes, ease(remap(raw, 0.76, 0.98)));
-      s.struckAlpha = lerp(this.from.struckAlpha, this.to.struckAlpha, tRelease);
-      s.labScatter = lerp(this.from.labScatter, 0, ease(remap(raw, 0.24, 0.6)));
-      s.labHadronize = lerp(0, this.to.labHadronize, ease(remap(raw, 0.54, 0.92)));
-      s._stretch = tStretch;
-      s._endForm = tEnds;
-      s._midForm = tMid;
-      s._release = tRelease;
-      return s;
-    }
-
-    var tF = ease(remap(raw, 0.14, 0.6));
-    var tP = ease(remap(raw, 0.48, 1.0));
-    s.photon = lerp(this.from.photon, this.to.photon, tF);
-    s.vertex = lerp(this.from.vertex, this.to.vertex, tF);
-    s.shower = lerp(this.from.shower, this.to.shower, tF);
-    s.string = lerp(this.from.string, this.to.string, tF);
-    s.e = lerpXY(this.from.e, this.to.e, tP);
-    s.qStruck = lerpXY(this.from.qStruck, this.to.qStruck, tP);
-    s.remnantPos = lerpXY(this.from.remnantPos, this.to.remnantPos, tP);
-    s.remnant = lerp(this.from.remnant, this.to.remnant, tP);
-    s.struckAlpha = lerp(this.from.struckAlpha, this.to.struckAlpha, tP);
+    s.e = lerpXY(from.e, to.e, tPos);
+    s.photon = lerp(from.photon, to.photon, tInt);
+    s.vertex = lerp(from.vertex, to.vertex, tInt);
+    s.qStruck = lerpXY(from.qStruck, to.qStruck, tStr);
+    s.remnantPos = lerpXY(from.remnantPos, to.remnantPos, tStr);
+    s.remnant = lerp(from.remnant, to.remnant, tStr);
+    s.string = lerp(from.string, to.string, tStr);
+    s.shower = lerp(from.shower, to.shower, tStr);
+    s.tracks = lerp(0.02, to.tracks, ease(remap(raw, 0.36, 0.92)));
+    s.labScatter = lerp(from.labScatter, to.labScatter, tInt);
     return s;
   };
 
-  DisVis.prototype._tick = function (ts) {
-    if (!this.alive) return;
+  DisVis.prototype._sampleHadronize = function (raw) {
+    var from = TGT.scatter;
+    var to = TGT.hadronize;
+    var s = lerpS(from, to, ease(raw));
+    var tFade = ease(remap(raw, 0.08, 0.34));
+    var tStretch = ease(remap(raw, 0.12, 0.44));
+    var tEnds = ease(remap(raw, 0.34, 0.6));
+    var tMid = ease(remap(raw, 0.54, 0.8));
+    var tRelease = ease(remap(raw, 0.72, 1.0));
+    var tQ = ease(remap(raw, 0.18, 0.68));
+    var tE = ease(remap(raw, 0.5, 1.0));
+
+    s.photon = lerp(from.photon, 0, tFade);
+    s.vertex = lerp(from.vertex, 0, tFade);
+    s.shower = lerp(from.shower, 0, tFade);
+    s.e = lerpXY(from.e, to.e, tE);
+    s.qStruck = lerpXY(from.qStruck, to.qStruck, tQ);
+    s.remnantPos = lerpXY(from.remnantPos, to.remnantPos, tStretch);
+    s.remnant = lerp(from.remnant, 1, tStretch);
+    s.quarks = lerp(from.quarks, to.quarks, ease(remap(raw, 0.12, 0.48)));
+    s.string = lerp(from.string, 1, tStretch) * (1 - 0.58 * tRelease);
+    s.hadrons = lerp(from.hadrons, 1, Math.max(tEnds, tMid));
+    s.breaks = lerp(from.breaks, 1, Math.max(tEnds, tMid));
+    s.jetEnvelope = lerp(from.jetEnvelope, 1, ease(remap(raw, 0.62, 0.94)));
+    s.tracks = lerp(from.tracks, to.tracks, ease(remap(raw, 0.62, 1.0)));
+    s.detector = lerp(from.detector, to.detector, ease(remap(raw, 0.78, 1.0)));
+    s.holes = lerp(from.holes, to.holes, ease(remap(raw, 0.76, 0.98)));
+    s.struckAlpha = lerp(from.struckAlpha, to.struckAlpha, tRelease);
+    s.labScatter = lerp(from.labScatter, 0, ease(remap(raw, 0.24, 0.6)));
+    s.labHadronize = lerp(0, to.labHadronize, ease(remap(raw, 0.54, 0.92)));
+    s._stretch = tStretch;
+    s._endForm = tEnds;
+    s._midForm = tMid;
+    s._release = tRelease;
+    return s;
+  };
+
+  DisVis.prototype._sampleReset = function (raw) {
+    var fadeOut = ease(remap(raw, 0, 0.42));
+    var fadeIn = ease(remap(raw, 0.42, 1.0));
+    var s;
+
+    if (raw < 0.42) {
+      s = copyState(TGT.hadronize);
+      s.eAlpha = lerp(1, 0, fadeOut);
+      s.tracks = lerp(TGT.hadronize.tracks, 0, fadeOut);
+      s.detector = lerp(TGT.hadronize.detector, 0, fadeOut);
+      s.holes = lerp(TGT.hadronize.holes, 0, fadeOut);
+      s.jetEnvelope = lerp(TGT.hadronize.jetEnvelope, 0, fadeOut);
+      s.hadrons = lerp(TGT.hadronize.hadrons, 0, fadeOut);
+      s.breaks = lerp(TGT.hadronize.breaks, 0, fadeOut);
+      s.string = lerp(TGT.hadronize.string, 0, fadeOut);
+      s.struckAlpha = lerp(TGT.hadronize.struckAlpha, 0, fadeOut);
+      s.labHadronize = lerp(TGT.hadronize.labHadronize, 0, fadeOut);
+      s._stretch = s.string;
+      s._endForm = s.breaks;
+      s._midForm = s.breaks;
+      s._release = 1;
+      return s;
+    }
+
+    s = copyState(TGT.approach);
+    s.eAlpha = lerp(0.3, 1, fadeIn);
+    return s;
+  };
+
+  DisVis.prototype._sampleState = function (cycle) {
+    if (cycle.isReset) {
+      return this._sampleReset(cycle.windowProgress);
+    }
+
+    if (cycle.phase === 'approach') {
+      return this._sampleScatter(cycle.windowProgress);
+    }
+
+    if (cycle.phase === 'scatter') {
+      return copyState(TGT.scatter);
+    }
+
+    return this._sampleHadronize(cycle.windowProgress);
+  };
+
+  DisVis.prototype.renderFrame = function (cycle) {
+    var ts = cycle.ts;
     var dt = Math.min(0.05, (ts - (this._ts || ts)) / 1000);
     this._ts = ts;
-    if (!this.reduced) this.t += dt;
-    if (this.prog < 1) {
-      this.prog = Math.min(1, this.prog + dt / (this.reduced ? 0.001 : PHASE_TRANSITION_SECONDS));
+
+    if (!this.reduced) {
+      this.t += dt;
     }
+
+    this.state = this._sampleState(cycle);
     this._render();
-    var self = this;
-    requestAnimationFrame(function (nextTs) {
-      self._tick(nextTs);
-    });
+  };
+
+  DisVis.prototype.resetTime = function () {
+    this._ts = 0;
   };
 
   DisVis.prototype.destroy = function () {
-    this.alive = false;
     window.removeEventListener('resize', this._onR);
   };
 
@@ -555,7 +575,7 @@
 
   DisVis.prototype._render = function () {
     var c = this.ctx;
-    var s = this._st();
+    var s = this.state;
     this._calcSQ(s);
     var axis = this._axisState(s);
     var breaks = this._breakState(s, axis);
@@ -577,7 +597,7 @@
     this._vertexFlash(c, s);
     this._detector(c, s, packets);
     this._electronGlow(c, s);
-    this._particleAlpha(c, s.e, 8.5, 'electron', 'e\u207B', 1);
+    this._particleAlpha(c, s.e, 8.5, 'electron', 'e\u207B', s.eAlpha);
     this._labels(c, s, axis, breaks);
     c.restore();
   };
@@ -793,9 +813,7 @@
 
   /* ── particle tracks ── */
   DisVis.prototype._tracks = function (c, s, axis, packets) {
-    if (s.tracks < 0.01) return;
     c.save();
-    c.globalAlpha = s.tracks;
     c.lineWidth = 1.6;
 
     c.strokeStyle = col('electron', 0.3);
@@ -804,6 +822,13 @@
     c.moveTo(58, 208);
     c.quadraticCurveTo(185, 205, 305, 200);
     c.stroke();
+
+    if (s.tracks < 0.01) {
+      c.restore();
+      return;
+    }
+
+    c.globalAlpha = s.tracks;
 
     c.strokeStyle = col('electron', 0.35);
     c.setLineDash([7, 5]);
@@ -1199,112 +1224,79 @@
     blocks.forEach(function (block) {
       var canvas = block.querySelector('.dis-canvas');
       var btns = Array.from(block.querySelectorAll('[data-dis-phase-button]'));
-      var panels = Array.from(block.querySelectorAll('[data-dis-panel]'));
+      var panel = block.closest('[data-about-tab-panel]');
+      var activePhase = null;
       if (!canvas) return;
 
       var vis = new DisVis(canvas, reduced);
-      var idx = 0;
-      var hovered = false;
-      var focusWithin = false;
-      var pauseSuppressed = false;
-      var pauseSuppressionTimer = null;
+      var loop = createPhaseLoop({
+        durationMs: app.config.INTERACTION_CYCLE_MS,
+        endHoldMs: app.config.INTERACTION_END_PAUSE_MS.dis,
+        endHoldProgress: getLoopEndProgress(app.config.INTERACTION_PHASE_WINDOWS),
+        phases: app.config.DIS_PHASES,
+        windows: app.config.INTERACTION_PHASE_WINDOWS,
+        initialProgress: getPhaseWindowStart(app.config.DIS_PHASES[0], app.config.DIS_PHASES, app.config.INTERACTION_PHASE_WINDOWS),
+        onUpdate: function (cycle) {
+          var highlightPhase = getWindowState(
+            cycle.progress,
+            app.config.DIS_PHASES,
+            app.config.INTERACTION_HIGHLIGHT_WINDOWS
+          ).phase;
 
-      function advancePhase() {
-        idx = (idx + 1) % app.config.DIS_PHASES.length;
-        apply(app.config.DIS_PHASES[idx]);
-      }
+          block.dataset.disPhase = cycle.phase;
+          vis.renderFrame(cycle);
 
-      var auto = createIntervalController(advancePhase, app.config.DIS_AUTOPLAY_MS);
-
-      function apply(phase, immediate) {
-        idx = app.config.DIS_PHASES.indexOf(phase);
-        block.dataset.disPhase = phase;
-        if (immediate) {
-          vis.from = TGT[phase];
-          vis.to = TGT[phase];
-          vis.prog = 1;
-        } else {
-          vis.setPhase(phase);
-        }
-        btns.forEach(function (b) {
-          var on = b.dataset.disPhaseButton === phase;
-          b.classList.toggle('is-active', on);
-          b.setAttribute('aria-pressed', String(on));
-        });
-        panels.forEach(function (p) {
-          var on = p.dataset.disPanel === phase;
-          p.hidden = !on;
-          if (on && !reduced && p.animate) {
-            p.animate(
-              [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }],
-              { duration: 360, easing: 'cubic-bezier(.22,1,.36,1)' }
-            );
+          if (highlightPhase === activePhase) {
+            return;
           }
-        });
+
+          activePhase = highlightPhase;
+          btns.forEach(function (button) {
+            var isActive = button.dataset.disPhaseButton === highlightPhase;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+          });
+        },
+      });
+
+      function isVisible() {
+        return !panel || !panel.hidden;
       }
 
-      function restart(immediate) {
-        auto.stop();
-        if (reduced) return;
-        if (immediate) advancePhase();
-        auto.start();
+      function resetToStart() {
+        vis.resetTime();
+        loop.reset(getPhaseWindowStart(app.config.DIS_PHASES[0], app.config.DIS_PHASES, app.config.INTERACTION_PHASE_WINDOWS));
       }
 
-      function suppressPauseForCycle() {
-        pauseSuppressed = true;
-        if (pauseSuppressionTimer) {
-          window.clearTimeout(pauseSuppressionTimer);
+      function resumeIfVisible() {
+        if (reduced || !isVisible()) {
+          return;
         }
-        pauseSuppressionTimer = window.setTimeout(function () {
-          pauseSuppressed = false;
-          pauseSuppressionTimer = null;
-          if (hovered || focusWithin) {
-            auto.stop();
-          }
-        }, app.config.DIS_AUTOPLAY_MS);
+
+        vis.resetTime();
+        loop.resume();
       }
 
-      function pauseForInteraction() {
-        if (!pauseSuppressed) {
-          auto.stop();
-        }
-      }
-
-      function startFromBeginning() {
-        apply(app.config.DIS_PHASES[0], true);
-        suppressPauseForCycle();
-        restart(true);
-      }
-
-      btns.forEach(function (b) {
-        b.addEventListener('click', function () {
-          apply(b.dataset.disPhaseButton, false);
-          restart(false);
+      btns.forEach(function (button) {
+        button.addEventListener('click', function () {
+          vis.resetTime();
+          loop.seekPhase(button.dataset.disPhaseButton);
+          resumeIfVisible();
         });
       });
       block.addEventListener('abouttabactivate', function () {
-        startFromBeginning();
+        resetToStart();
+        resumeIfVisible();
       });
-      block.addEventListener('mouseenter', function () {
-        hovered = true;
-        pauseForInteraction();
-      });
-      block.addEventListener('mouseleave', function () {
-        hovered = false;
-        restart(false);
-      });
-      block.addEventListener('focusin', function () {
-        focusWithin = true;
-        pauseForInteraction();
-      });
-      block.addEventListener('focusout', function (e) {
-        if (!e.relatedTarget || !block.contains(e.relatedTarget)) {
-          focusWithin = false;
-          restart(false);
-        }
+      block.addEventListener('abouttabdeactivate', function () {
+        loop.pause();
+        vis.resetTime();
       });
 
-      startFromBeginning();
+      resetToStart();
+      if (!reduced && isVisible()) {
+        loop.start();
+      }
     });
   }
 

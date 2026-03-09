@@ -10,8 +10,8 @@
     });
   }
 
-  function createAboutTabActivateEvent(tabId) {
-    return new CustomEvent('abouttabactivate', {
+  function createAboutTabLifecycleEvent(type, tabId) {
+    return new CustomEvent(type, {
       bubbles: true,
       detail: { tabId: tabId },
     });
@@ -46,7 +46,23 @@
   function setAboutTab(root, tabId, focusButton) {
     var buttons = root.querySelectorAll('[data-about-tab-button]');
     var panels = root.querySelectorAll('[data-about-tab-panel]');
+    var previousTabId = root.getAttribute('data-about-active-tab');
+    var previousPanel = null;
     var activePanel = null;
+
+    if (previousTabId && previousTabId !== tabId) {
+      previousPanel = root.querySelector('[data-about-tab-panel="' + previousTabId + '"]');
+    }
+
+    if (previousPanel) {
+      previousPanel.dispatchEvent(createAboutTabLifecycleEvent('abouttabdeactivate', previousTabId));
+      Array.prototype.forEach.call(
+        previousPanel.querySelectorAll('[data-fsi-card], [data-mec-phase], [data-res-phase], [data-dis-phase]'),
+        function (node) {
+          node.dispatchEvent(createAboutTabLifecycleEvent('abouttabdeactivate', previousTabId));
+        },
+      );
+    }
 
     Array.prototype.forEach.call(buttons, function (button) {
       var isActive = button.getAttribute('data-about-tab-button') === tabId;
@@ -68,11 +84,11 @@
 
     root.setAttribute('data-about-active-tab', tabId);
     if (activePanel) {
-      activePanel.dispatchEvent(createAboutTabActivateEvent(tabId));
+      activePanel.dispatchEvent(createAboutTabLifecycleEvent('abouttabactivate', tabId));
       Array.prototype.forEach.call(
         activePanel.querySelectorAll('[data-fsi-card], [data-mec-phase], [data-res-phase], [data-dis-phase]'),
         function (node) {
-          node.dispatchEvent(createAboutTabActivateEvent(tabId));
+          node.dispatchEvent(createAboutTabLifecycleEvent('abouttabactivate', tabId));
         },
       );
       resetCssAnimations(activePanel);

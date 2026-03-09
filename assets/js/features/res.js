@@ -2,9 +2,11 @@
   'use strict';
 
   var TAU = Math.PI * 2;
-  var PHASE_TRANSITION_SECONDS = 1.7;
   var prefersReducedMotion = app.lib.dom.prefersReducedMotion;
-  var createIntervalController = app.lib.timers.createIntervalController;
+  var createPhaseLoop = app.lib.phaseLoop.createPhaseLoop;
+  var getLoopEndProgress = app.lib.phaseLoop.getLoopEndProgress;
+  var getPhaseWindowStart = app.lib.phaseLoop.getPhaseWindowStart;
+  var getWindowState = app.lib.phaseLoop.getWindowState;
 
   /* ── colour palette ── */
   var P = {
@@ -37,6 +39,7 @@
       p: { x: 420, y: 195 },
       n: { x: 420, y: 195 },
       pi: { x: 420, y: 195 },
+      eAlpha: 1,
       photon: 0,
       delta: 0,
       vertex: 0,
@@ -54,6 +57,7 @@
       p: { x: 420, y: 195 },
       n: { x: 420, y: 195 },
       pi: { x: 420, y: 195 },
+      eAlpha: 1,
       photon: 1,
       delta: 1,
       vertex: 1,
@@ -71,6 +75,7 @@
       p: { x: 420, y: 195 },
       n: { x: 830, y: 190 },
       pi: { x: 830, y: 305 },
+      eAlpha: 1,
       photon: 0,
       delta: 0,
       vertex: 0,
@@ -101,6 +106,7 @@
       p: lerpXY(a.p, b.p, t),
       n: lerpXY(a.n, b.n, t),
       pi: lerpXY(a.pi, b.pi, t),
+      eAlpha: lerp(a.eAlpha, b.eAlpha, t),
       photon: lerp(a.photon, b.photon, t),
       delta: lerp(a.delta, b.delta, t),
       vertex: lerp(a.vertex, b.vertex, t),
@@ -153,13 +159,10 @@
     this.ctx = cvs.getContext('2d');
     this.reduced = reduced;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.from = TGT.approach;
-    this.to = TGT.approach;
-    this.prog = 1;
     this.t = 0;
     this.nucs = scatterNucleons();
-    this.alive = true;
     this._ts = 0;
+    this.state = lerpS(TGT.approach, TGT.approach, 0);
 
     var self = this;
     this._onR = function () {
@@ -167,9 +170,6 @@
     };
     window.addEventListener('resize', this._onR);
     this._size();
-    requestAnimationFrame(function (ts) {
-      self._tick(ts);
-    });
   }
 
   ResVis.prototype._size = function () {
@@ -182,73 +182,116 @@
     this.sc = (w * this.dpr) / LW;
   };
 
-  ResVis.prototype.setPhase = function (p) {
-    this.from = this._st();
-    this.to = TGT[p];
-    this.prog = 0;
-  };
-
   /* remap t from [a,b] → [0,1], clamped */
   function remap(t, a, b) {
     return t <= a ? 0 : t >= b ? 1 : (t - a) / (b - a);
   }
 
-  ResVis.prototype._st = function () {
-    var raw = Math.min(1, this.prog);
-    var t = ease(raw);
-    var s = lerpS(this.from, this.to, t);
+  function copyState(state) {
+    return lerpS(state, state, 0);
+  };
 
-    var dPhoton = this.to.photon - this.from.photon;
-    if (Math.abs(dPhoton) < 0.01) return s;
+  ResVis.prototype._sampleInteraction = function (from, to, raw) {
+    var s = lerpS(from, to, ease(raw));
+    var dPhoton = to.photon - from.photon;
 
-    if (dPhoton > 0) {
-      // Photon appearing: electron glides in, interaction fades in with overlap
-      var tPos = ease(remap(raw, 0, 0.62));
-      var tInt = ease(remap(raw, 0.42, 0.9));
-      s.e = lerpXY(this.from.e, this.to.e, tPos);
-      s.photon = lerp(this.from.photon, this.to.photon, tInt);
-      s.vertex = lerp(this.from.vertex, this.to.vertex, tInt);
-      s.delta = lerp(this.from.delta, this.to.delta, tInt);
-    } else {
-      // Photon disappearing: interaction fades, then all particles depart together
-      var tInt = ease(remap(raw, 0.14, 0.6));
-      var tPos = ease(remap(raw, 0.48, 1.0));
-      s.photon = lerp(this.from.photon, this.to.photon, tInt);
-      s.vertex = lerp(this.from.vertex, this.to.vertex, tInt);
-      s.delta = lerp(this.from.delta, this.to.delta, tInt);
-      s.e = lerpXY(this.from.e, this.to.e, tPos);
-      s.n = lerpXY(this.from.n, this.to.n, tPos);
-      s.pi = lerpXY(this.from.pi, this.to.pi, tPos);
-      s.nAlpha = lerp(this.from.nAlpha, this.to.nAlpha, tPos);
-      s.piAlpha = lerp(this.from.piAlpha, this.to.piAlpha, tPos);
+    if (Math.abs(dPhoton) < 0.01) {
+      return s;
     }
 
+    if (dPhoton > 0) {
+      var tPos = ease(remap(raw, 0, 0.62));
+      var tInt = ease(remap(raw, 0.42, 0.9));
+      s.e = lerpXY(from.e, to.e, tPos);
+      s.photon = lerp(from.photon, to.photon, tInt);
+      s.vertex = lerp(from.vertex, to.vertex, tInt);
+      s.delta = lerp(from.delta, to.delta, tInt);
+      s.tracks = lerp(0.02, to.tracks, ease(remap(raw, 0.36, 0.92)));
+      s.pAlpha = lerp(from.pAlpha, to.pAlpha, ease(remap(raw, 0.35, 0.88)));
+      return s;
+    }
+
+    var tInt = ease(remap(raw, 0.08, 0.3));
+    var tPos = ease(remap(raw, 0.08, 1.0));
+    s.photon = lerp(from.photon, to.photon, tInt);
+    s.vertex = lerp(from.vertex, to.vertex, tInt);
+    s.delta = lerp(from.delta, to.delta, tInt);
+    s.e = lerpXY(from.e, to.e, tPos);
+    s.n = lerpXY(from.n, to.n, tPos);
+    s.pi = lerpXY(from.pi, to.pi, tPos);
+    s.tracks = lerp(from.tracks, to.tracks, ease(remap(raw, 0.08, 0.78)));
+    s.holes = lerp(from.holes, to.holes, ease(remap(raw, 0.52, 0.86)));
+    s.detector = lerp(from.detector, to.detector, ease(remap(raw, 0.64, 1.0)));
+    s.nAlpha = lerp(from.nAlpha, to.nAlpha, tPos);
+    s.piAlpha = lerp(from.piAlpha, to.piAlpha, tPos);
+    s.labRes = lerp(from.labRes, 0, ease(remap(raw, 0.0, 0.35)));
+    s.labDecay = lerp(0, to.labDecay, ease(remap(raw, 0.44, 0.9)));
     return s;
   };
 
-  ResVis.prototype._tick = function (ts) {
-    if (!this.alive) return;
+  ResVis.prototype._sampleReset = function (raw) {
+    var fadeOut = ease(remap(raw, 0, 0.42));
+    var fadeIn = ease(remap(raw, 0.42, 1.0));
+    var s;
+
+    if (raw < 0.42) {
+      s = copyState(TGT.decay);
+      s.eAlpha = lerp(1, 0, fadeOut);
+      s.nAlpha = lerp(1, 0, fadeOut);
+      s.piAlpha = lerp(1, 0, fadeOut);
+      s.tracks = lerp(TGT.decay.tracks, 0, fadeOut);
+      s.holes = lerp(TGT.decay.holes, 0, fadeOut);
+      s.detector = lerp(TGT.decay.detector, 0, fadeOut);
+      s.labDecay = lerp(TGT.decay.labDecay, 0, fadeOut);
+      return s;
+    }
+
+    s = copyState(TGT.approach);
+    s.eAlpha = lerp(0.3, 1, fadeIn);
+    s.pAlpha = lerp(0.6, 1, fadeIn);
+    return s;
+  };
+
+  ResVis.prototype._sampleState = function (cycle) {
+    if (cycle.isReset) {
+      return this._sampleReset(cycle.windowProgress);
+    }
+
+    if (cycle.phase === 'approach') {
+      return this._sampleInteraction(TGT.approach, TGT.resonance, cycle.windowProgress);
+    }
+
+    if (cycle.phase === 'resonance') {
+      return copyState(TGT.resonance);
+    }
+
+    return this._sampleInteraction(TGT.resonance, TGT.decay, cycle.windowProgress);
+  };
+
+  ResVis.prototype.renderFrame = function (cycle) {
+    var ts = cycle.ts;
     var dt = Math.min(0.05, (ts - (this._ts || ts)) / 1000);
     this._ts = ts;
-    if (!this.reduced) this.t += dt;
-    if (this.prog < 1) {
-      this.prog = Math.min(1, this.prog + dt / (this.reduced ? 0.001 : PHASE_TRANSITION_SECONDS));
+
+    if (!this.reduced) {
+      this.t += dt;
     }
+
+    this.state = this._sampleState(cycle);
     this._render();
-    var self = this;
-    requestAnimationFrame(function (t) {
-      self._tick(t);
-    });
+  };
+
+  ResVis.prototype.resetTime = function () {
+    this._ts = 0;
   };
 
   ResVis.prototype.destroy = function () {
-    this.alive = false;
     window.removeEventListener('resize', this._onR);
   };
 
   ResVis.prototype._render = function () {
     var c = this.ctx;
-    var s = this._st();
+    var s = this.state;
     c.save();
     c.scale(this.sc, this.sc);
     c.clearRect(0, 0, LW, LH);
@@ -261,7 +304,7 @@
     this._vertexFlash(c, s);
     this._detector(c, s);
     this._electronGlow(c, s);
-    this._particleAlpha(c, s.e, 8.5, 'electron', 'e\u207B', 1);
+    this._particleAlpha(c, s.e, 8.5, 'electron', 'e\u207B', s.eAlpha);
     this._particleAlpha(c, s.p, 7.5, 'proton', 'p', s.pAlpha);
     this._particleAlpha(c, s.n, 7.5, 'neutron', 'n', s.nAlpha);
     this._particleAlpha(c, s.pi, 7.5, 'pion', '\u03C0\u207A', s.piAlpha);
@@ -333,9 +376,7 @@
 
   /* ── particle tracks ── */
   ResVis.prototype._tracks = function (c, s) {
-    if (s.tracks < 0.01) return;
     c.save();
-    c.globalAlpha = s.tracks;
     c.lineWidth = 1.6;
 
     // electron in (solid)
@@ -345,6 +386,13 @@
     c.moveTo(58, 200);
     c.quadraticCurveTo(185, 198, 305, 195);
     c.stroke();
+
+    if (s.tracks < 0.01) {
+      c.restore();
+      return;
+    }
+
+    c.globalAlpha = s.tracks;
 
     // electron out (dashed, animated)
     c.strokeStyle = col('electron', 0.35);
@@ -660,115 +708,79 @@
     blocks.forEach(function (block) {
       var canvas = block.querySelector('.res-canvas');
       var btns = Array.from(block.querySelectorAll('[data-res-phase-button]'));
-      var panels = Array.from(block.querySelectorAll('[data-res-panel]'));
+      var panel = block.closest('[data-about-tab-panel]');
+      var activePhase = null;
       if (!canvas) return;
 
       var vis = new ResVis(canvas, reduced);
-      var idx = 0;
-      var hovered = false;
-      var focusWithin = false;
-      var pauseSuppressed = false;
-      var pauseSuppressionTimer = null;
+      var loop = createPhaseLoop({
+        durationMs: app.config.INTERACTION_CYCLE_MS,
+        endHoldMs: app.config.INTERACTION_END_PAUSE_MS.res,
+        endHoldProgress: getLoopEndProgress(app.config.INTERACTION_PHASE_WINDOWS),
+        phases: app.config.RES_PHASES,
+        windows: app.config.INTERACTION_PHASE_WINDOWS,
+        initialProgress: getPhaseWindowStart(app.config.RES_PHASES[0], app.config.RES_PHASES, app.config.INTERACTION_PHASE_WINDOWS),
+        onUpdate: function (cycle) {
+          var highlightPhase = getWindowState(
+            cycle.progress,
+            app.config.RES_PHASES,
+            app.config.INTERACTION_HIGHLIGHT_WINDOWS
+          ).phase;
 
-      function advancePhase() {
-        idx = (idx + 1) % app.config.RES_PHASES.length;
-        apply(app.config.RES_PHASES[idx]);
-      }
+          block.dataset.resPhase = cycle.phase;
+          vis.renderFrame(cycle);
 
-      var auto = createIntervalController(advancePhase, app.config.RES_AUTOPLAY_MS);
-
-      function apply(phase, immediate) {
-        idx = app.config.RES_PHASES.indexOf(phase);
-        block.dataset.resPhase = phase;
-        if (immediate) {
-          vis.from = TGT[phase];
-          vis.to = TGT[phase];
-          vis.prog = 1;
-        } else {
-          vis.setPhase(phase);
-        }
-        btns.forEach(function (b) {
-          var on = b.dataset.resPhaseButton === phase;
-          b.classList.toggle('is-active', on);
-          b.setAttribute('aria-pressed', String(on));
-        });
-        panels.forEach(function (p) {
-          var on = p.dataset.resPanel === phase;
-          p.hidden = !on;
-          if (on && !reduced && p.animate) {
-            p.animate(
-              [
-                { opacity: 0, transform: 'translateY(8px)' },
-                { opacity: 1, transform: 'translateY(0)' },
-              ],
-              { duration: 360, easing: 'cubic-bezier(.22,1,.36,1)' },
-            );
+          if (highlightPhase === activePhase) {
+            return;
           }
-        });
+
+          activePhase = highlightPhase;
+          btns.forEach(function (button) {
+            var isActive = button.dataset.resPhaseButton === highlightPhase;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+          });
+        },
+      });
+
+      function isVisible() {
+        return !panel || !panel.hidden;
       }
 
-      function restart(immediate) {
-        auto.stop();
-        if (reduced) return;
-        if (immediate) advancePhase();
-        auto.start();
+      function resetToStart() {
+        vis.resetTime();
+        loop.reset(getPhaseWindowStart(app.config.RES_PHASES[0], app.config.RES_PHASES, app.config.INTERACTION_PHASE_WINDOWS));
       }
 
-      function suppressPauseForCycle() {
-        pauseSuppressed = true;
-        if (pauseSuppressionTimer) {
-          window.clearTimeout(pauseSuppressionTimer);
+      function resumeIfVisible() {
+        if (reduced || !isVisible()) {
+          return;
         }
-        pauseSuppressionTimer = window.setTimeout(function () {
-          pauseSuppressed = false;
-          pauseSuppressionTimer = null;
-          if (hovered || focusWithin) {
-            auto.stop();
-          }
-        }, app.config.RES_AUTOPLAY_MS);
+
+        vis.resetTime();
+        loop.resume();
       }
 
-      function pauseForInteraction() {
-        if (!pauseSuppressed) {
-          auto.stop();
-        }
-      }
-
-      function startFromBeginning() {
-        apply(app.config.RES_PHASES[0], true);
-        suppressPauseForCycle();
-        restart(true);
-      }
-
-      btns.forEach(function (b) {
-        b.addEventListener('click', function () {
-          apply(b.dataset.resPhaseButton, false);
-          restart(false);
+      btns.forEach(function (button) {
+        button.addEventListener('click', function () {
+          vis.resetTime();
+          loop.seekPhase(button.dataset.resPhaseButton);
+          resumeIfVisible();
         });
       });
       block.addEventListener('abouttabactivate', function () {
-        startFromBeginning();
+        resetToStart();
+        resumeIfVisible();
       });
-      block.addEventListener('mouseenter', function () {
-        hovered = true;
-        pauseForInteraction();
-      });
-      block.addEventListener('mouseleave', function () {
-        hovered = false;
-        restart(false);
-      });
-      block.addEventListener('focusin', function () {
-        focusWithin = true;
-        pauseForInteraction();
-      });
-      block.addEventListener('focusout', function (e) {
-        if (!e.relatedTarget || !block.contains(e.relatedTarget)) {
-          focusWithin = false;
-          restart(false);
-        }
+      block.addEventListener('abouttabdeactivate', function () {
+        loop.pause();
+        vis.resetTime();
       });
 
-      startFromBeginning();
+      resetToStart();
+      if (!reduced && isVisible()) {
+        loop.start();
+      }
     });
   }
 

@@ -626,7 +626,7 @@
         <!-- Old Dominion University -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.odu.edu/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/odu.png" alt="Old Dominion University" class="h-14 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            <img src="assets/logos/odu2.png" alt="Old Dominion University" class="h-14 w-auto brightness-0 invert opacity-90 group-hover/logo:opacity-100 transition-opacity">
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">Old Dominion University</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">USA</span>
@@ -725,162 +725,22 @@
         <h2 class="text-4xl md:text-5xl font-bold text-white">Publications</h2>
       </div>
 
-      <div class="reveal space-y-8 max-w-5xl mx-auto">
-
-        <!-- Publication 01 -->
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
-          <div class="flex gap-6">
-            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-              <span class="pub-number font-medium">01</span>
-            </div>
-            <div class="flex-1">
-              <p class="text-white/90 leading-relaxed mb-1">
-                S. Dytman, M. Betancourt, N. Steinberg, L.B. Weinstein, A. Ashkenazi et al.
-              </p>
-              <a href="https://arxiv.org/abs/2508.01905" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
-                &ldquo;Proton Transparency and Neutrino Physics: New Methods and Modeling&rdquo;
-              </a>
-              <p class="text-sm text-gray-500 font-mono mt-1">
-                arXiv: <a href="https://arxiv.org/abs/2508.01905" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">2508.01905</a> [hep-ex]
-              </p>
-            </div>
-          </div>
-          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
-            <div class="flex-1">
-              <p class="text-sm text-gray-400 leading-relaxed">
-                New data-driven measurement of proton transparency using CLAS electron&ndash;nucleus scattering on He, C, and Fe targets. Transparency is defined as the ratio of events with a detected proton to quasi-elastic events where a proton should have been knocked out&mdash;avoiding model dependence of earlier extractions. Results are consistent with previous measurements but reveal that GENIE needs improved nuclear ground-state and FSI modeling, particularly at low proton momenta.
-              </p>
-            </div>
-            <a href="https://arxiv.org/abs/2508.01905" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
-              <img src="assets/images/pubs/pub01_transparency.png" alt="Proton transparency vs momentum for He, C, Fe" class="w-full h-full object-cover">
-            </a>
-          </div>
+      <div
+        class="reveal max-w-5xl mx-auto"
+        data-publications-root
+        data-publications-limit="3"
+        data-publications-archive-url="publications.html"
+      >
+        <div
+          data-publications-status
+          class="text-center text-sm text-gray-500 font-mono py-12"
+          role="status"
+          aria-live="polite"
+        >
+          Loading publications...
         </div>
-
-        <!-- Publication 02 -->
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
-          <div class="flex gap-6">
-            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-              <span class="pub-number font-medium">02</span>
-            </div>
-            <div class="flex-1">
-              <p class="text-white/90 leading-relaxed mb-1">
-                J. Tena Vidal, A. Ashkenazi, L.B. Weinstein, P.G. Blunden, S. Dytman, N. Steinberg
-              </p>
-              <a href="https://arxiv.org/abs/2409.05736" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
-                &ldquo;A universal implementation of radiative effects in neutrino event generators&rdquo;
-              </a>
-              <p class="text-sm text-gray-500 font-mono mt-1">
-                Comput. Phys. Commun. 310 (2025) 109509 &middot;
-                arXiv: <a href="https://arxiv.org/abs/2409.05736" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">2409.05736</a>
-              </p>
-            </div>
-          </div>
-          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
-            <div class="flex-1">
-              <p class="text-sm text-gray-400 leading-relaxed">
-                Implements QED radiative corrections&mdash;real photon emission by incident and scattered electrons, plus virtual-photon exchange and vacuum polarization&mdash;into neutrino event generators using the extended peaking approximation. Validated within GENIE, the framework enables proper unfolding of radiative effects when benchmarking electron&ndash;nucleus data against generator predictions, closing a long-standing gap in e&ndash;A/&nu;&ndash;A comparisons.
-              </p>
-            </div>
-            <a href="https://arxiv.org/abs/2409.05736" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
-              <img src="assets/images/pubs/pub02_radiative.png" alt="Radiated vs unradiated eGENIE missing energy and momentum" class="w-full h-full object-cover">
-            </a>
-          </div>
-        </div>
-
-        <!-- Publication 03 -->
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
-          <div class="flex gap-6">
-            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-              <span class="pub-number font-medium">03</span>
-            </div>
-            <div class="flex-1">
-              <p class="text-white/90 leading-relaxed mb-1">
-                A. M. Ankowski et al.
-              </p>
-              <a href="https://arxiv.org/abs/2203.06853" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
-                &ldquo;Electron scattering and neutrino physics&rdquo;
-              </a>
-              <p class="text-sm text-gray-500 font-mono mt-1">
-                J. Phys. G: Nucl. Part. Phys. 50 120501 (2023) &middot;
-                arXiv: <a href="https://arxiv.org/abs/2203.06853" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">2203.06853</a>
-              </p>
-            </div>
-          </div>
-          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
-            <div class="flex-1">
-              <p class="text-sm text-gray-400 leading-relaxed">
-                Comprehensive topical review on how electron&ndash;nucleus scattering data constrain neutrino interaction models across the QE, resonance, DIS, and MEC channels from tens of MeV to several GeV. Outlines the critical role of e&ndash;A measurements in reducing nuclear-interaction systematics for DUNE, Hyper-K, and the broader oscillation program. A community white-paper with 53 authors spanning the e&ndash;A and &nu;&ndash;A fields.
-              </p>
-            </div>
-            <a href="https://arxiv.org/abs/2203.06853" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
-              <img src="assets/images/pubs/pub03_kinematics.png" alt="Kinematic coverage of e-A data on carbon overlaid with DUNE flux" class="w-full h-full object-cover">
-            </a>
-          </div>
-        </div>
-
-        <!-- Publication 04 -->
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
-          <div class="flex gap-6">
-            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-              <span class="pub-number font-medium">04</span>
-            </div>
-            <div class="flex-1">
-              <p class="text-white/90 leading-relaxed mb-1">
-                M. Khachatryan, A. Papadopoulou, A. Ashkenazi et al.
-              </p>
-              <a href="https://doi.org/10.1038/s41586-021-04046-5" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
-                &ldquo;Electron-beam energy reconstruction for neutrino oscillation measurements&rdquo;
-              </a>
-              <p class="text-sm text-gray-500 font-mono mt-1">
-                Nature 599, 565&ndash;570 (2021) &middot;
-                <a href="https://doi.org/10.1038/s41586-021-04046-5" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">doi:10.1038/s41586-021-04046-5</a>
-              </p>
-            </div>
-          </div>
-          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
-            <div class="flex-1">
-              <p class="text-sm text-gray-400 leading-relaxed">
-                Landmark e4&nu; result exploiting the known electron beam energy as a proxy for the unknown neutrino energy to benchmark energy-reconstruction methods on CLAS data (C, Fe targets). Demonstrates that calorimetric reconstruction outperforms QE-based approaches, reducing biases from nuclear effects. Reveals that current neutrino generators mis-reconstruct the incident energy at the few-percent level&mdash;directly relevant for oscillation &delta;<sub>CP</sub> measurements.
-              </p>
-            </div>
-            <a href="https://doi.org/10.1038/s41586-021-04046-5" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
-              <img src="assets/images/pubs/pub04_ereco.png" alt="QE reconstructed energy showing data vs GENIE SuSAv2 and G2018" class="w-full h-full object-cover">
-            </a>
-          </div>
-        </div>
-
-        <!-- Publication 05 -->
-        <div class="group p-6 rounded-xl bg-white/[0.03] border border-white/5 card-hover">
-          <div class="flex gap-6">
-            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-              <span class="pub-number font-medium">05</span>
-            </div>
-            <div class="flex-1">
-              <p class="text-white/90 leading-relaxed mb-1">
-                A. Papadopoulou, A. Ashkenazi et al.
-              </p>
-              <a href="https://arxiv.org/abs/2009.07228" target="_blank" rel="noopener" class="text-white font-medium hover:text-accent transition-colors">
-                &ldquo;Inclusive Electron Scattering And The GENIE Neutrino Event Generator&rdquo;
-              </a>
-              <p class="text-sm text-gray-500 font-mono mt-1">
-                Phys. Rev. D 103, 113003 (2021) &middot;
-                arXiv: <a href="https://arxiv.org/abs/2009.07228" target="_blank" rel="noopener" class="text-accent/70 hover:text-accent transition-colors">2009.07228</a>
-              </p>
-            </div>
-          </div>
-          <div class="flex flex-col md:flex-row gap-5 mt-5 ml-[4.5rem]">
-            <div class="flex-1">
-              <p class="text-sm text-gray-400 leading-relaxed">
-                First systematic test of GENIE&rsquo;s electron-scattering mode against inclusive (e,e&prime;) cross-section data. Incorporates radiative corrections and the SuSAv2-based QE+MEC model into the generator. Shows adequate agreement at lower beam energies but exposes discrepancies in the RES/DIS regime at higher energies, charting the path for improved nuclear modeling in neutrino generators.
-              </p>
-            </div>
-            <a href="https://arxiv.org/abs/2009.07228" target="_blank" rel="noopener" class="flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors">
-              <img src="assets/images/pubs/pub05_inclusive.png" alt="Inclusive C and Fe cross sections comparing GSuSAv2 and G2018 to data" class="w-full h-full object-cover">
-            </a>
-          </div>
-        </div>
-
+        <div data-publications-list class="space-y-8"></div>
+        <div data-publications-cta class="hidden pt-10 text-center"></div>
       </div>
     </div>
   </section>
@@ -982,10 +842,12 @@
   <script src="assets/js/config.js" defer></script>
   <script src="assets/js/lib/dom.js" defer></script>
   <script src="assets/js/lib/timers.js" defer></script>
+  <script src="assets/js/lib/phase-loop.js" defer></script>
   <script src="assets/js/features/particles.js" defer></script>
   <script src="assets/js/features/reveal.js" defer></script>
   <script src="assets/js/features/navigation.js" defer></script>
   <script src="assets/js/features/carousel.js" defer></script>
+  <script src="assets/js/features/publications.js" defer></script>
   <script src="assets/js/features/about-tabs.js" defer></script>
   <script src="assets/js/features/mec.js" defer></script>
   <script src="assets/js/features/res.js" defer></script>

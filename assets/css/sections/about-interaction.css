@@ -79,6 +79,7 @@
   border: 1px solid rgba(148, 163, 184, 0.22);
   background: rgba(15, 23, 42, 0.42);
   color: rgba(226, 232, 240, 0.88);
+  box-shadow: 0 0 0 1px transparent, 0 0 0 transparent;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.78rem;
   letter-spacing: 0.02em;
@@ -87,6 +88,66 @@
 .interaction-phase-index {
   color: #7dd3fc;
   margin-right: 0.55rem;
+}
+
+.interaction-phase-list .interaction-phase-chip:nth-child(1) {
+  animation: qePhaseChipOne var(--interaction-duration) linear infinite;
+}
+
+.interaction-phase-list .interaction-phase-chip:nth-child(2) {
+  animation: qePhaseChipTwo var(--interaction-duration) linear infinite;
+}
+
+.interaction-phase-list .interaction-phase-chip:nth-child(3) {
+  animation: qePhaseChipThree var(--interaction-duration) linear infinite;
+}
+
+@keyframes qePhaseChipOne {
+  0%, 22%, 100% {
+    border-color: rgba(125, 211, 252, 0.62);
+    background: rgba(14, 116, 144, 0.16);
+    color: #f0f9ff;
+    box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.12), 0 0 28px rgba(56, 189, 248, 0.16);
+  }
+
+  26%, 90% {
+    border-color: rgba(148, 163, 184, 0.22);
+    background: rgba(15, 23, 42, 0.42);
+    color: rgba(226, 232, 240, 0.88);
+    box-shadow: 0 0 0 1px transparent, 0 0 0 transparent;
+  }
+}
+
+@keyframes qePhaseChipTwo {
+  0%, 22%, 44%, 100% {
+    border-color: rgba(148, 163, 184, 0.22);
+    background: rgba(15, 23, 42, 0.42);
+    color: rgba(226, 232, 240, 0.88);
+    box-shadow: 0 0 0 1px transparent, 0 0 0 transparent;
+  }
+
+  26%, 40% {
+    border-color: rgba(125, 211, 252, 0.62);
+    background: rgba(14, 116, 144, 0.16);
+    color: #f0f9ff;
+    box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.12), 0 0 28px rgba(56, 189, 248, 0.16);
+  }
+}
+
+@keyframes qePhaseChipThree {
+  0%, 40%, 100% {
+    border-color: rgba(148, 163, 184, 0.22);
+    background: rgba(15, 23, 42, 0.42);
+    color: rgba(226, 232, 240, 0.88);
+    box-shadow: 0 0 0 1px transparent, 0 0 0 transparent;
+  }
+
+  44%, 90% {
+    border-color: rgba(125, 211, 252, 0.62);
+    background: rgba(14, 116, 144, 0.16);
+    color: #f0f9ff;
+    box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.12), 0 0 28px rgba(56, 189, 248, 0.16);
+  }
 }
 
 .interaction-stage {

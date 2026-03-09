@@ -2,9 +2,11 @@
   'use strict';
 
   var TAU = Math.PI * 2;
-  var PHASE_TRANSITION_SECONDS = 1.7;
   var prefersReducedMotion = app.lib.dom.prefersReducedMotion;
-  var createIntervalController = app.lib.timers.createIntervalController;
+  var createPhaseLoop = app.lib.phaseLoop.createPhaseLoop;
+  var getLoopEndProgress = app.lib.phaseLoop.getLoopEndProgress;
+  var getPhaseWindowStart = app.lib.phaseLoop.getPhaseWindowStart;
+  var getWindowState = app.lib.phaseLoop.getWindowState;
 
   /* ── colour palette ── */
   var P = {
@@ -35,6 +37,9 @@
       e: { x: 58, y: 200 },
       p: { x: 405, y: 170 },
       n: { x: 452, y: 215 },
+      eAlpha: 1,
+      pAlpha: 1,
+      nAlpha: 1,
       photon: 0,
       meson: 0.3,
       vertex: 0,
@@ -48,6 +53,9 @@
       e: { x: 310, y: 195 },
       p: { x: 405, y: 170 },
       n: { x: 452, y: 215 },
+      eAlpha: 1,
+      pAlpha: 1,
+      nAlpha: 1,
       photon: 1,
       meson: 0.9,
       vertex: 1,
@@ -61,6 +69,9 @@
       e: { x: 830, y: 65 },
       p: { x: 830, y: 125 },
       n: { x: 830, y: 305 },
+      eAlpha: 1,
+      pAlpha: 1,
+      nAlpha: 1,
       photon: 0,
       meson: 0,
       vertex: 0,
@@ -87,6 +98,9 @@
       e: lerpXY(a.e, b.e, t),
       p: lerpXY(a.p, b.p, t),
       n: lerpXY(a.n, b.n, t),
+      eAlpha: lerp(a.eAlpha, b.eAlpha, t),
+      pAlpha: lerp(a.pAlpha, b.pAlpha, t),
+      nAlpha: lerp(a.nAlpha, b.nAlpha, t),
       photon: lerp(a.photon, b.photon, t),
       meson: lerp(a.meson, b.meson, t),
       vertex: lerp(a.vertex, b.vertex, t),
@@ -136,13 +150,10 @@
     this.ctx = cvs.getContext('2d');
     this.reduced = reduced;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.from = TGT.pair;
-    this.to = TGT.pair;
-    this.prog = 1;
     this.t = 0;
     this.nucs = scatterNucleons();
-    this.alive = true;
     this._ts = 0;
+    this.state = lerpS(TGT.pair, TGT.pair, 0);
 
     var self = this;
     this._onR = function () {
@@ -150,9 +161,6 @@
     };
     window.addEventListener('resize', this._onR);
     this._size();
-    requestAnimationFrame(function (ts) {
-      self._tick(ts);
-    });
   }
 
   MecVis.prototype._size = function () {
@@ -165,73 +173,115 @@
     this.sc = (w * this.dpr) / LW;
   };
 
-  MecVis.prototype.setPhase = function (p) {
-    this.from = this._st();
-    this.to = TGT[p];
-    this.prog = 0;
-  };
-
   /* remap t from [a,b] → [0,1], clamped */
   function remap(t, a, b) {
     return t <= a ? 0 : t >= b ? 1 : (t - a) / (b - a);
   }
 
-  MecVis.prototype._st = function () {
-    var raw = Math.min(1, this.prog);
-    var t = ease(raw);
-    var s = lerpS(this.from, this.to, t);
+  function copyState(state) {
+    return lerpS(state, state, 0);
+  };
 
-    // Sequence electron/particle motion and photon/vertex with smooth overlap,
-    // mirroring the first-panel CSS keyframe feel.
-    var dPhoton = this.to.photon - this.from.photon;
-    if (Math.abs(dPhoton) < 0.01) return s;
+  MecVis.prototype._sampleInteraction = function (from, to, raw) {
+    var s = lerpS(from, to, ease(raw));
+    var dPhoton = to.photon - from.photon;
 
-    if (dPhoton > 0) {
-      // Photon appearing: electron glides in, interaction fades in with overlap
-      var tPos = ease(remap(raw, 0, 0.62));
-      var tInt = ease(remap(raw, 0.42, 0.9));
-      s.e = lerpXY(this.from.e, this.to.e, tPos);
-      s.photon = lerp(this.from.photon, this.to.photon, tInt);
-      s.vertex = lerp(this.from.vertex, this.to.vertex, tInt);
-      s.meson = lerp(this.from.meson, this.to.meson, tInt);
-    } else {
-      // Photon disappearing: interaction fades, then all particles depart together
-      var tInt = ease(remap(raw, 0.14, 0.6));
-      var tPos = ease(remap(raw, 0.48, 1.0));
-      s.photon = lerp(this.from.photon, this.to.photon, tInt);
-      s.vertex = lerp(this.from.vertex, this.to.vertex, tInt);
-      s.meson = lerp(this.from.meson, this.to.meson, tInt);
-      s.e = lerpXY(this.from.e, this.to.e, tPos);
-      s.p = lerpXY(this.from.p, this.to.p, tPos);
-      s.n = lerpXY(this.from.n, this.to.n, tPos);
+    if (Math.abs(dPhoton) < 0.01) {
+      return s;
     }
 
+    if (dPhoton > 0) {
+      var tPos = ease(remap(raw, 0, 0.62));
+      var tInt = ease(remap(raw, 0.42, 0.9));
+      s.e = lerpXY(from.e, to.e, tPos);
+      s.photon = lerp(from.photon, to.photon, tInt);
+      s.vertex = lerp(from.vertex, to.vertex, tInt);
+      s.meson = lerp(from.meson, to.meson, tInt);
+      s.tracks = lerp(0.02, to.tracks, ease(remap(raw, 0.36, 0.92)));
+      return s;
+    }
+
+    var tInt = ease(remap(raw, 0.08, 0.3));
+    var tPos = ease(remap(raw, 0.08, 1.0));
+    s.photon = lerp(from.photon, to.photon, tInt);
+    s.vertex = lerp(from.vertex, to.vertex, tInt);
+    s.meson = lerp(from.meson, to.meson, ease(remap(raw, 0.04, 0.24)));
+    s.e = lerpXY(from.e, to.e, tPos);
+    s.p = lerpXY(from.p, to.p, tPos);
+    s.n = lerpXY(from.n, to.n, tPos);
+    s.tracks = lerp(from.tracks, to.tracks, ease(remap(raw, 0.08, 0.78)));
+    s.holes = lerp(from.holes, to.holes, ease(remap(raw, 0.52, 0.86)));
+    s.detector = lerp(from.detector, to.detector, ease(remap(raw, 0.64, 1.0)));
+    s.labEx = lerp(from.labEx, 0, ease(remap(raw, 0.0, 0.35)));
+    s.labKO = lerp(0, to.labKO, ease(remap(raw, 0.44, 0.9)));
     return s;
   };
 
-  MecVis.prototype._tick = function (ts) {
-    if (!this.alive) return;
+  MecVis.prototype._sampleReset = function (raw) {
+    var fadeOut = ease(remap(raw, 0, 0.42));
+    var fadeIn = ease(remap(raw, 0.42, 1.0));
+    var s;
+
+    if (raw < 0.42) {
+      s = copyState(TGT.knockout);
+      s.eAlpha = lerp(1, 0, fadeOut);
+      s.pAlpha = lerp(1, 0, fadeOut);
+      s.nAlpha = lerp(1, 0, fadeOut);
+      s.tracks = lerp(TGT.knockout.tracks, 0, fadeOut);
+      s.holes = lerp(TGT.knockout.holes, 0, fadeOut);
+      s.detector = lerp(TGT.knockout.detector, 0, fadeOut);
+      s.labKO = lerp(TGT.knockout.labKO, 0, fadeOut);
+      return s;
+    }
+
+    s = copyState(TGT.pair);
+    s.eAlpha = lerp(0.3, 1, fadeIn);
+    s.pAlpha = lerp(0.6, 1, fadeIn);
+    s.nAlpha = lerp(0.6, 1, fadeIn);
+    s.meson = lerp(0.12, TGT.pair.meson, fadeIn);
+    return s;
+  };
+
+  MecVis.prototype._sampleState = function (cycle) {
+    if (cycle.isReset) {
+      return this._sampleReset(cycle.windowProgress);
+    }
+
+    if (cycle.phase === 'pair') {
+      return this._sampleInteraction(TGT.pair, TGT.exchange, cycle.windowProgress);
+    }
+
+    if (cycle.phase === 'exchange') {
+      return copyState(TGT.exchange);
+    }
+
+    return this._sampleInteraction(TGT.exchange, TGT.knockout, cycle.windowProgress);
+  };
+
+  MecVis.prototype.renderFrame = function (cycle) {
+    var ts = cycle.ts;
     var dt = Math.min(0.05, (ts - (this._ts || ts)) / 1000);
     this._ts = ts;
-    if (!this.reduced) this.t += dt;
-    if (this.prog < 1) {
-      this.prog = Math.min(1, this.prog + dt / (this.reduced ? 0.001 : PHASE_TRANSITION_SECONDS));
+
+    if (!this.reduced) {
+      this.t += dt;
     }
+
+    this.state = this._sampleState(cycle);
     this._render();
-    var self = this;
-    requestAnimationFrame(function (t) {
-      self._tick(t);
-    });
+  };
+
+  MecVis.prototype.resetTime = function () {
+    this._ts = 0;
   };
 
   MecVis.prototype.destroy = function () {
-    this.alive = false;
     window.removeEventListener('resize', this._onR);
   };
 
   MecVis.prototype._render = function () {
     var c = this.ctx;
-    var s = this._st();
+    var s = this.state;
     c.save();
     c.scale(this.sc, this.sc);
     c.clearRect(0, 0, LW, LH);
@@ -244,9 +294,9 @@
     this._vertexFlash(c, s);
     this._detector(c, s);
     this._electronGlow(c, s);
-    this._particle(c, s.e, 8.5, 'electron', 'e\u207B');
-    this._particle(c, s.p, 7.5, 'proton', 'p');
-    this._particle(c, s.n, 7.5, 'neutron', 'n');
+    this._particle(c, s.e, 8.5, 'electron', 'e\u207B', s.eAlpha);
+    this._particle(c, s.p, 7.5, 'proton', 'p', s.pAlpha);
+    this._particle(c, s.n, 7.5, 'neutron', 'n', s.nAlpha);
     this._labels(c, s);
     c.restore();
   };
@@ -319,9 +369,7 @@
 
   /* ── particle tracks ── */
   MecVis.prototype._tracks = function (c, s) {
-    if (s.tracks < 0.01) return;
     c.save();
-    c.globalAlpha = s.tracks;
     c.lineWidth = 1.6;
 
     // electron in (solid)
@@ -331,6 +379,13 @@
     c.moveTo(58, 200);
     c.quadraticCurveTo(185, 198, 310, 195);
     c.stroke();
+
+    if (s.tracks < 0.01) {
+      c.restore();
+      return;
+    }
+
+    c.globalAlpha = s.tracks;
 
     // electron out (dashed, animated)
     c.strokeStyle = col('electron', 0.35);
@@ -562,7 +617,11 @@
   };
 
   /* ── particle with glow ── */
-  MecVis.prototype._particle = function (c, pos, r, palKey, label) {
+  MecVis.prototype._particle = function (c, pos, r, palKey, label, alpha) {
+    if (alpha < 0.01) return;
+    c.save();
+    c.globalAlpha = alpha;
+
     // glow halo
     var g = c.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, r * 3.2);
     g.addColorStop(0, col(palKey, 0.35));
@@ -588,6 +647,7 @@
     c.font = '12px "JetBrains Mono", monospace';
     c.textAlign = 'left';
     c.fillText(label, pos.x + r + 5, pos.y + 4);
+    c.restore();
   };
 
   /* ── text labels ── */
@@ -627,115 +687,79 @@
     blocks.forEach(function (block) {
       var canvas = block.querySelector('.mec-canvas');
       var btns = Array.from(block.querySelectorAll('[data-mec-phase-button]'));
-      var panels = Array.from(block.querySelectorAll('[data-mec-panel]'));
+      var panel = block.closest('[data-about-tab-panel]');
+      var activePhase = null;
       if (!canvas) return;
 
       var vis = new MecVis(canvas, reduced);
-      var idx = 0;
-      var hovered = false;
-      var focusWithin = false;
-      var pauseSuppressed = false;
-      var pauseSuppressionTimer = null;
+      var loop = createPhaseLoop({
+        durationMs: app.config.INTERACTION_CYCLE_MS,
+        endHoldMs: app.config.INTERACTION_END_PAUSE_MS.mec,
+        endHoldProgress: getLoopEndProgress(app.config.INTERACTION_PHASE_WINDOWS),
+        phases: app.config.MEC_PHASES,
+        windows: app.config.INTERACTION_PHASE_WINDOWS,
+        initialProgress: getPhaseWindowStart(app.config.MEC_PHASES[0], app.config.MEC_PHASES, app.config.INTERACTION_PHASE_WINDOWS),
+        onUpdate: function (cycle) {
+          var highlightPhase = getWindowState(
+            cycle.progress,
+            app.config.MEC_PHASES,
+            app.config.INTERACTION_HIGHLIGHT_WINDOWS
+          ).phase;
 
-      function advancePhase() {
-        idx = (idx + 1) % app.config.MEC_PHASES.length;
-        apply(app.config.MEC_PHASES[idx]);
-      }
+          block.dataset.mecPhase = cycle.phase;
+          vis.renderFrame(cycle);
 
-      var auto = createIntervalController(advancePhase, app.config.MEC_AUTOPLAY_MS);
-
-      function apply(phase, immediate) {
-        idx = app.config.MEC_PHASES.indexOf(phase);
-        block.dataset.mecPhase = phase;
-        if (immediate) {
-          vis.from = TGT[phase];
-          vis.to = TGT[phase];
-          vis.prog = 1;
-        } else {
-          vis.setPhase(phase);
-        }
-        btns.forEach(function (b) {
-          var on = b.dataset.mecPhaseButton === phase;
-          b.classList.toggle('is-active', on);
-          b.setAttribute('aria-pressed', String(on));
-        });
-        panels.forEach(function (p) {
-          var on = p.dataset.mecPanel === phase;
-          p.hidden = !on;
-          if (on && !reduced && p.animate) {
-            p.animate(
-              [
-                { opacity: 0, transform: 'translateY(8px)' },
-                { opacity: 1, transform: 'translateY(0)' },
-              ],
-              { duration: 360, easing: 'cubic-bezier(.22,1,.36,1)' },
-            );
+          if (highlightPhase === activePhase) {
+            return;
           }
-        });
+
+          activePhase = highlightPhase;
+          btns.forEach(function (button) {
+            var isActive = button.dataset.mecPhaseButton === highlightPhase;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+          });
+        },
+      });
+
+      function isVisible() {
+        return !panel || !panel.hidden;
       }
 
-      function restart(immediate) {
-        auto.stop();
-        if (reduced) return;
-        if (immediate) advancePhase();
-        auto.start();
+      function resetToStart() {
+        vis.resetTime();
+        loop.reset(getPhaseWindowStart(app.config.MEC_PHASES[0], app.config.MEC_PHASES, app.config.INTERACTION_PHASE_WINDOWS));
       }
 
-      function suppressPauseForCycle() {
-        pauseSuppressed = true;
-        if (pauseSuppressionTimer) {
-          window.clearTimeout(pauseSuppressionTimer);
+      function resumeIfVisible() {
+        if (reduced || !isVisible()) {
+          return;
         }
-        pauseSuppressionTimer = window.setTimeout(function () {
-          pauseSuppressed = false;
-          pauseSuppressionTimer = null;
-          if (hovered || focusWithin) {
-            auto.stop();
-          }
-        }, app.config.MEC_AUTOPLAY_MS);
+
+        vis.resetTime();
+        loop.resume();
       }
 
-      function pauseForInteraction() {
-        if (!pauseSuppressed) {
-          auto.stop();
-        }
-      }
-
-      function startFromBeginning() {
-        apply(app.config.MEC_PHASES[0], true);
-        suppressPauseForCycle();
-        restart(true);
-      }
-
-      btns.forEach(function (b) {
-        b.addEventListener('click', function () {
-          apply(b.dataset.mecPhaseButton, false);
-          restart(false);
+      btns.forEach(function (button) {
+        button.addEventListener('click', function () {
+          vis.resetTime();
+          loop.seekPhase(button.dataset.mecPhaseButton);
+          resumeIfVisible();
         });
       });
       block.addEventListener('abouttabactivate', function () {
-        startFromBeginning();
+        resetToStart();
+        resumeIfVisible();
       });
-      block.addEventListener('mouseenter', function () {
-        hovered = true;
-        pauseForInteraction();
-      });
-      block.addEventListener('mouseleave', function () {
-        hovered = false;
-        restart(false);
-      });
-      block.addEventListener('focusin', function () {
-        focusWithin = true;
-        pauseForInteraction();
-      });
-      block.addEventListener('focusout', function (e) {
-        if (!e.relatedTarget || !block.contains(e.relatedTarget)) {
-          focusWithin = false;
-          restart(false);
-        }
+      block.addEventListener('abouttabdeactivate', function () {
+        loop.pause();
+        vis.resetTime();
       });
 
-      startFromBeginning();
+      resetToStart();
+      if (!reduced && isVisible()) {
+        loop.start();
+      }
     });
   }
 
