@@ -5,10 +5,20 @@
   .nucleus-halo,
   .nucleus-shell,
   .proton-group,
+  .qe-scene,
+  .qe-phase-list-electron,
+  .qe-phase-list-neutrino,
+  .qe-copy-panel-electron,
+  .qe-copy-panel-neutrino,
   .interaction-label,
   .interaction-step,
   .electron-out-track,
+  .muon-out-track,
   .proton-track,
+  .weak-wave,
+  .neutrino-group,
+  .muon-group,
+  .neutron-group,
   .fsi-medium-halo,
   .fsi-medium-shell,
   .fsi-vertex-flash,
@@ -35,6 +45,62 @@
   }
   .electron-group,
   .proton-group {
+    opacity: 1;
+  }
+  .interaction-card-qe .qe-phase-stack {
+    min-height: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .interaction-card-qe .qe-phase-list {
+    grid-area: auto;
+    position: relative;
+    inset: auto;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .interaction-card-qe .qe-phase-list + .qe-phase-list {
+    border-top: 1px solid rgba(148, 163, 184, 0.14);
+    padding-top: 0.75rem;
+  }
+  .interaction-card-qe .qe-stage-track {
+    aspect-ratio: auto;
+    min-height: 0;
+    display: grid;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+  .interaction-card-qe .qe-scene {
+    position: relative;
+    inset: auto;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .interaction-card-qe .qe-scene + .qe-scene {
+    border-top: 1px solid rgba(148, 163, 184, 0.14);
+    padding-top: 1rem;
+  }
+  .interaction-card-qe .electron-group {
+    transform: translate(650px, -90px);
+  }
+  .interaction-card-qe .proton-group {
+    opacity: 1;
+    transform: translate(220px, 116px);
+  }
+  .interaction-card-qe .neutrino-group {
+    opacity: 1;
+    transform: translate(285px, -10px);
+  }
+  .interaction-card-qe .muon-group {
+    opacity: 1;
+    transform: translate(365px, -80px);
+  }
+  .interaction-card-qe .neutron-group {
+    opacity: 0.35;
+    transform: none;
+  }
+  .interaction-card-qe .muon-out-track,
+  .interaction-card-qe .weak-wave {
     opacity: 1;
   }
   .interaction-label {
@@ -94,6 +160,67 @@
   .fsi-row3-hit-a,
   .fsi-row3-hit-b {
     transform: scale(1);
+  }
+  .cvc-phase-list .interaction-phase-chip,
+  .cvc-flow-pulse,
+  .cvc-track-line-in,
+  .cvc-track-line-out,
+  .cvc-track-line-weak-in,
+  .cvc-track-line-lepton,
+  .cvc-track-line-proton,
+  .cvc-dot-electron,
+  .cvc-dot-electron-out,
+  .cvc-dot-neutrino,
+  .cvc-burst-em,
+  .cvc-burst-weak,
+  .cvc-nucleus-measure,
+  .cvc-nucleus-predict,
+  .cvc-spectrum-bar,
+  .cvc-current-pill-em,
+  .cvc-current-pill-weak,
+  .cvc-current-branch-muted,
+  .cvc-current-branch-live,
+  .cvc-transfer-pulse,
+  .cvc-module-vector,
+  .cvc-module-axial {
+    animation: none !important;
+  }
+  .cvc-flow-pulse,
+  .cvc-transfer-pulse {
+    opacity: 0.5 !important;
+  }
+  .cvc-flow-pulse {
+    transform: translateX(calc(100% - 7rem)) !important;
+  }
+  .cvc-transfer-pulse {
+    transform: translateX(calc(100% - 4.75rem)) !important;
+  }
+  .cvc-dot-electron {
+    left: 92% !important;
+    opacity: 1 !important;
+  }
+  .cvc-dot-electron-out {
+    left: 92% !important;
+    opacity: 0.8 !important;
+  }
+  .cvc-dot-neutrino {
+    left: 92% !important;
+    opacity: 1 !important;
+  }
+  .cvc-burst-em,
+  .cvc-burst-weak {
+    opacity: 0.55 !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+  .cvc-nucleus-measure,
+  .cvc-nucleus-predict,
+  .cvc-module-vector,
+  .cvc-module-axial {
+    transform: none !important;
+  }
+  .cvc-nucleus-measure,
+  .cvc-nucleus-predict {
+    transform: translateY(-50%) scale(1) !important;
   }
   .mec-phase-button,
   .res-phase-button,

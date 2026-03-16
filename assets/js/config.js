@@ -5,6 +5,7 @@
     PARTICLE_COUNT: 40,
     NAVBAR_SCROLL_THRESHOLD: 50,
     CAROUSEL_AUTOPLAY_MS: 5500,
+    CAROUSEL_DATA_URL: 'assets/data/carousel.json',
     PUBLICATIONS_DATA_URL: 'assets/data/publications.json',
     PUBLICATIONS_PREVIEW_LIMIT: 3,
     INTERACTION_CYCLE_MS: 9500,

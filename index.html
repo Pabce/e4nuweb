@@ -136,8 +136,8 @@
 
       <div class="reveal mt-16 about-illustrations" data-about-tabs>
         <div class="mb-6">
-          <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Electron-Nucleus Interaction</h3>
-          <p class="text-gray-400 mt-2 max-w-3xl">Different reaction channels overlap inside the nucleus. We must model them all!</p>
+          <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Interaction Channels and the CVC Bridge</h3>
+          <p class="text-gray-400 mt-2 max-w-3xl">Different reaction channels overlap inside the nucleus, and CVC explains how the vector-sector lessons from electron scattering carry into weak charged-current predictions.</p>
         </div>
         <div class="about-tab-bar" role="tablist" aria-label="About page interaction illustrations">
           <button type="button" class="about-tab-button is-active" id="about-tab-electron" data-about-tab-button="electron" role="tab" aria-selected="true" aria-controls="about-panel-electron" tabindex="0">Quasielastic (QE)</button>
@@ -145,75 +145,144 @@
           <button type="button" class="about-tab-button" id="about-tab-mec" data-about-tab-button="mec" role="tab" aria-selected="false" aria-controls="about-panel-mec" tabindex="-1">2p2h / MEC</button>
           <button type="button" class="about-tab-button" id="about-tab-res" data-about-tab-button="res" role="tab" aria-selected="false" aria-controls="about-panel-res" tabindex="-1">RES</button>
           <button type="button" class="about-tab-button" id="about-tab-dis" data-about-tab-button="dis" role="tab" aria-selected="false" aria-controls="about-panel-dis" tabindex="-1">DIS</button>
+          <button type="button" class="about-tab-button" id="about-tab-cvc" data-about-tab-button="cvc" role="tab" aria-selected="false" aria-controls="about-panel-cvc" tabindex="-1">CVC Bridge</button>
         </div>
 
         <div class="about-tab-panels mt-6">
           <section class="about-tab-panel" id="about-panel-electron" data-about-tab-panel="electron" role="tabpanel" aria-labelledby="about-tab-electron">
-            <div class="interaction-card rounded-3xl border border-white/10 p-6 md:p-10">
+            <div class="interaction-card interaction-card-qe rounded-3xl border border-white/10 p-6 md:p-10">
               <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                 <div>
                   <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Quasielastic (QE)</h3>
-                  <p class="text-gray-400 mt-2 max-w-3xl">A stylized view of an <span class="font-mono text-accent">(e,e&apos;p)</span> process: the electron exchanges a virtual photon with the nucleus, is deflected, and a proton can be emitted from the excited nuclear state.</p>
+                  <p class="text-gray-400 mt-2 max-w-3xl">Two QE interactions are illustrated: <span class="font-mono text-accent">(e,e&apos;p)</span> electron scattering <span class="font-mono text-amber-200">&gamma;</span> exchange, followed by a <span class="font-mono text-emerald-200">&nu;<sub>&mu;</sub></span> charged-current interaction with <span class="font-mono text-emerald-200">W+</span> exchange. We see the shared lepton-plus-proton topology.</p>
                 </div>
-                <span class="inline-flex items-center self-start px-3 py-1 rounded-full text-xs font-mono tracking-wide text-amber-200 border border-amber-300/40 bg-amber-300/10">Exchanged boson: γ*</span>
+                <div class="flex flex-wrap gap-2">
+                  <span class="inline-flex items-center self-start px-3 py-1 rounded-full text-xs font-mono tracking-wide text-amber-200 border border-amber-300/40 bg-amber-300/10">Exchanged bosons: &gamma;* / W+</span>
+                </div>
               </div>
 
-              <div class="interaction-phase-list mt-8" aria-label="Quasielastic interaction phases">
-                <div class="interaction-phase-chip"><span class="interaction-phase-index">1.</span>Incoming electron</div>
-                <div class="interaction-phase-chip"><span class="interaction-phase-index">2.</span>Virtual photon exchange</div>
-                <div class="interaction-phase-chip"><span class="interaction-phase-index">3.</span>Deflection and proton knockout</div>
+              <div class="qe-phase-stack mt-8" aria-label="Parallel quasielastic interaction phases">
+                <div class="interaction-phase-list qe-phase-list qe-phase-list-electron" aria-hidden="true">
+                  <div class="interaction-phase-chip"><span class="interaction-phase-index">1.</span>Incoming electron</div>
+                  <div class="interaction-phase-chip"><span class="interaction-phase-index">2.</span>Virtual photon exchange</div>
+                  <div class="interaction-phase-chip"><span class="interaction-phase-index">3.</span>Deflected electron and proton knockout</div>
+                </div>
+                <div class="interaction-phase-list qe-phase-list qe-phase-list-neutrino" aria-hidden="true">
+                  <div class="interaction-phase-chip"><span class="interaction-phase-index">1.</span>Incoming &nu;<sub>&mu;</sub></div>
+                  <div class="interaction-phase-chip"><span class="interaction-phase-index">2.</span>W+ exchange converts n to p</div>
+                  <div class="interaction-phase-chip"><span class="interaction-phase-index">3.</span>Outgoing &mu;- and proton</div>
+                </div>
               </div>
 
               <div class="interaction-grid interaction-grid-stack mt-8">
-                <div class="interaction-stage rounded-3xl">
-                  <svg class="interaction-svg" viewBox="0 0 860 340" role="img" aria-label="Electron approaches a nucleus, exchanges a virtual photon, is deflected, and the nucleus emits a proton">
-                    <path class="interaction-track electron-in-track" d="M80 180 C170 180 280 178 365 170" />
-                    <path class="interaction-track electron-out-track" d="M365 170 C470 150 610 125 730 90" />
-                    <path class="interaction-track proton-track" d="M430 170 C495 200 570 240 650 282" />
+                <div class="interaction-stage interaction-stage-qe rounded-3xl" role="img" aria-label="Looping comparison between electron quasielastic scattering and muon-neutrino charged-current quasielastic scattering, each showing an incoming lepton, boson exchange with one bound nucleon, and an outgoing charged lepton plus proton">
+                  <div class="qe-stage-track">
+                    <div class="qe-scene qe-scene-electron" aria-hidden="true">
+                      <span class="qe-scene-badge qe-scene-badge-electron">Electron QE</span>
+                      <svg class="interaction-svg" viewBox="0 0 860 340" aria-hidden="true">
+                        <path class="interaction-track electron-in-track" d="M80 180 C170 180 280 178 365 170" />
+                        <path class="interaction-track electron-out-track" d="M365 170 C470 150 610 125 730 90" />
+                        <path class="interaction-track proton-track" d="M430 170 C495 200 570 240 650 282" />
 
-                    <circle class="nucleus-halo" cx="430" cy="170" r="54" fill="rgba(56, 189, 248, 0.2)" />
-                    <circle class="nucleus-shell" cx="430" cy="170" r="37" fill="none" stroke="rgba(125, 211, 252, 0.65)" stroke-width="2.5" />
-                    <circle cx="430" cy="170" r="21" fill="#e2e8f0" opacity="0.92" />
-                    <circle cx="416" cy="164" r="4" fill="#38bdf8" />
-                    <circle cx="438" cy="160" r="4" fill="#f87171" />
-                    <circle cx="426" cy="180" r="4" fill="#38bdf8" />
-                    <circle cx="444" cy="178" r="4" fill="#f87171" />
+                        <circle class="nucleus-halo" cx="430" cy="170" r="54" fill="rgba(56, 189, 248, 0.2)" />
+                        <circle class="nucleus-shell" cx="430" cy="170" r="37" fill="none" stroke="rgba(125, 211, 252, 0.65)" stroke-width="2.5" />
+                        <circle cx="430" cy="170" r="21" fill="#e2e8f0" opacity="0.92" />
+                        <circle cx="416" cy="164" r="4" fill="#38bdf8" />
+                        <circle cx="438" cy="160" r="4" fill="#f87171" />
+                        <circle cx="426" cy="180" r="4" fill="#38bdf8" />
+                        <circle cx="444" cy="178" r="4" fill="#f87171" />
 
-                    <circle class="interaction-flash" cx="365" cy="170" r="11" fill="rgba(250, 204, 21, 0.75)" />
-                    <path class="gamma-wave" d="M364 170 C378 153 392 187 406 170 C420 153 434 187 448 170" />
-                    <text class="interaction-label gamma-label" x="404" y="147" fill="#fde68a" font-size="15" font-family="JetBrains Mono, monospace">γ*</text>
+                        <circle class="interaction-flash" cx="365" cy="170" r="11" fill="rgba(250, 204, 21, 0.75)" />
+                        <path class="gamma-wave" d="M364 170 C378 153 392 187 406 170 C420 153 434 187 448 170" />
+                        <text class="interaction-label gamma-label" x="404" y="147" fill="#fde68a" font-size="15" font-family="JetBrains Mono, monospace">γ*</text>
 
-                    <g class="electron-group">
-                      <circle class="electron-particle" cx="80" cy="180" r="8.5" fill="#7dd3fc" />
-                      <text x="94" y="186" fill="#bae6fd" font-size="14" font-family="JetBrains Mono, monospace">e-</text>
-                    </g>
+                        <g class="electron-group">
+                          <circle class="electron-particle" cx="80" cy="180" r="8.5" fill="#7dd3fc" />
+                          <text x="94" y="186" fill="#bae6fd" font-size="14" font-family="JetBrains Mono, monospace">e-</text>
+                        </g>
 
-                    <g class="proton-group">
-                      <circle class="proton-particle" cx="430" cy="170" r="8" fill="#f87171" />
-                      <text x="444" y="176" fill="#fecaca" font-size="14" font-family="JetBrains Mono, monospace">p</text>
-                    </g>
+                        <g class="proton-group">
+                          <circle class="proton-particle" cx="430" cy="170" r="8" fill="#f87171" />
+                          <text x="444" y="176" fill="#fecaca" font-size="14" font-family="JetBrains Mono, monospace">p</text>
+                        </g>
 
-                    <text class="interaction-label excited-label" x="468" y="161" fill="#cbd5e1" font-size="12" font-family="JetBrains Mono, monospace">excited nucleus</text>
-                    <text class="interaction-label deflected-label" x="644" y="76" fill="#93c5fd" font-size="12" font-family="JetBrains Mono, monospace">deflected electron</text>
-                    <text class="interaction-label emitted-label" x="618" y="306" fill="#fca5a5" font-size="12" font-family="JetBrains Mono, monospace">emitted proton</text>
-                  </svg>
+                        <text class="interaction-label excited-label" x="468" y="161" fill="#cbd5e1" font-size="12" font-family="JetBrains Mono, monospace">excited nucleus</text>
+                        <text class="interaction-label deflected-label" x="644" y="76" fill="#93c5fd" font-size="12" font-family="JetBrains Mono, monospace">deflected electron</text>
+                        <text class="interaction-label emitted-label" x="618" y="306" fill="#fca5a5" font-size="12" font-family="JetBrains Mono, monospace">emitted proton</text>
+                      </svg>
+                    </div>
+
+                    <div class="qe-scene qe-scene-neutrino" aria-hidden="true">
+                      <span class="qe-scene-badge qe-scene-badge-neutrino"><span class="qe-scene-symbol">&nu;<sub>&mu;</sub></span>-CCQE analogue</span>
+                      <svg class="interaction-svg" viewBox="0 0 860 340" aria-hidden="true">
+                        <path class="interaction-track neutrino-in-track" d="M80 180 C170 180 280 178 365 170" />
+                        <path class="interaction-track muon-out-track" d="M365 170 C470 150 610 125 730 90" />
+                        <path class="interaction-track proton-track" d="M430 170 C495 200 570 240 650 282" />
+
+                        <circle class="nucleus-halo weak-nucleus-halo" cx="430" cy="170" r="54" />
+                        <circle class="nucleus-shell weak-nucleus-shell" cx="430" cy="170" r="37" fill="none" stroke-width="2.5" />
+                        <circle cx="430" cy="170" r="21" fill="#e2e8f0" opacity="0.92" />
+                        <circle cx="416" cy="164" r="4" fill="#38bdf8" />
+                        <circle cx="438" cy="160" r="4" fill="#f87171" />
+                        <circle cx="426" cy="180" r="4" fill="#38bdf8" />
+                        <circle cx="444" cy="178" r="4" fill="#f87171" />
+
+                        <circle class="interaction-flash weak-flash" cx="365" cy="170" r="11" fill="rgba(74, 222, 128, 0.72)" />
+                        <path class="weak-wave" d="M364 170 C378 153 392 187 406 170 C420 153 434 187 448 170" />
+                        <text class="interaction-label w-label" x="406" y="147" fill="#86efac" font-size="15" font-family="JetBrains Mono, monospace">W+</text>
+
+                        <g class="neutrino-group">
+                          <circle class="neutrino-particle" cx="80" cy="180" r="8.5" fill="#5eead4" />
+                          <text x="94" y="186" fill="#ccfbf1" font-size="14" font-family="JetBrains Mono, monospace">ν<tspan baseline-shift="sub" font-size="10">&mu;</tspan></text>
+                        </g>
+
+                        <g class="muon-group">
+                          <circle class="muon-particle" cx="365" cy="170" r="8.5" fill="#7dd3fc" />
+                          <text x="379" y="176" fill="#dbeafe" font-size="14" font-family="JetBrains Mono, monospace">μ-</text>
+                        </g>
+
+                        <g class="neutron-group">
+                          <circle class="neutron-particle" cx="430" cy="170" r="8" fill="#93c5fd" />
+                          <text class="neutron-inner-label" x="424" y="175" fill="#0f172a" font-size="14" font-family="JetBrains Mono, monospace">n</text>
+                        </g>
+
+                        <g class="proton-group">
+                          <circle class="proton-particle" cx="430" cy="170" r="8" fill="#f87171" />
+                          <text x="444" y="176" fill="#fecaca" font-size="14" font-family="JetBrains Mono, monospace">p</text>
+                        </g>
+
+                        <text class="interaction-label neutron-label" x="468" y="161" fill="#cbd5e1" font-size="12" font-family="JetBrains Mono, monospace">bound neutron</text>
+                        <text class="interaction-label muon-label" x="646" y="76" fill="#bfdbfe" font-size="12" font-family="JetBrains Mono, monospace">outgoing muon</text>
+                        <text class="interaction-label emitted-label" x="618" y="306" fill="#fca5a5" font-size="12" font-family="JetBrains Mono, monospace">emitted proton</text>
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="interaction-copy">
-                  <article class="interaction-panel">
-                    <h4 class="interaction-panel-title"><span class="interaction-index">QE</span>Quasielastic proton knockout</h4>
-                    <p>The incoming lepton transfers momentum to a single bound nucleon through the exchanged <span class="font-mono text-amber-200">γ*</span>. In this sketch the transported hadron remains a proton, producing the canonical electron-plus-proton quasielastic topology.</p>
+                  <article class="interaction-panel qe-copy-panel qe-copy-panel-electron">
+                    <h4 class="interaction-panel-title"><span class="interaction-index">eA</span>Electron QE</h4>
+                    <p>The incoming electron transfers momentum through the exchanged <span class="font-mono text-amber-200">γ*</span> to a bound proton. The outgoing topology is the familiar scattered electron plus knocked-out proton used to constrain the vector response of the nucleus.</p>
                     <div class="interaction-chip-row">
                       <span class="interaction-chip">Final state: e&apos; + p</span>
-                      <span class="interaction-chip">Vector current only</span>
-                      <span class="interaction-chip">Quasielastic topology</span>
+                      <span class="interaction-chip">&gamma;* exchange</span>
+                      <span class="interaction-chip">Vector current</span>
+                    </div>
+                  </article>
+                  <article class="interaction-panel qe-copy-panel qe-copy-panel-neutrino">
+                    <h4 class="interaction-panel-title"><span class="interaction-index">&nu;<sub>&mu;</sub></span>Charged-current QE analogue</h4>
+                    <p>The incoming <span class="font-mono text-emerald-200">&nu;<sub>&mu;</sub></span> exchanges a <span class="font-mono text-emerald-200">W+</span> with a bound neutron, converting it into a proton and producing an outgoing muon. The lepton identity changes, but the single-nucleon knockout geometry remains closely parallel.</p>
+                    <div class="interaction-chip-row">
+                      <span class="interaction-chip">Final state: &mu;- + p</span>
+                      <span class="interaction-chip">W+ exchange</span>
+                      <span class="interaction-chip">Vector + axial currents</span>
                     </div>
                   </article>
                 </div>
               </div>
 
               <p class="text-sm md:text-base text-gray-300 mt-6 leading-relaxed border-l-2 border-accent/35 pl-4">
-                <span class="text-accent font-semibold">Vector-vs-axial:</span> the electromagnetic interaction is purely vector-like, and electron scattering constrains the vector-current half of the neutrino-nucleus interaction puzzle. The weak axial response is the missing term that must be inferred through neutrino data and modeling.
+                <span class="text-accent font-semibold">Why show both:</span> electron scattering isolates the electromagnetic vector response, while <span class="font-mono text-emerald-200">&nu;<sub>&mu;</sub></span> CCQE adds weak couplings and axial structure.
               </p>
             </div>
           </section>
@@ -508,6 +577,190 @@
           </p>
             </div>
           </section>
+
+          <section class="about-tab-panel" id="about-panel-cvc" data-about-tab-panel="cvc" role="tabpanel" aria-labelledby="about-tab-cvc" hidden>
+            <div class="interaction-card cvc-card rounded-3xl border border-white/10 p-6 md:p-10">
+              <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div>
+                  <h3 class="text-2xl md:text-3xl font-semibold text-white tracking-tight">Conserved Vector Current (CVC)</h3>
+                  <p class="text-gray-400 mt-2 max-w-3xl">Electron scattering constrains the vector hadronic ingredients. CVC identifies the isovector electromagnetic current with the charged weak vector current used in neutrino-nucleus predictions.</p>
+                </div>
+                <span class="cvc-badge">Why e4nu works</span>
+              </div>
+
+              <div class="interaction-phase-list cvc-phase-list mt-8" aria-label="CVC bridge phases">
+                <div class="interaction-phase-chip"><span class="interaction-phase-index">1.</span>Measure EM vector input</div>
+                <div class="interaction-phase-chip"><span class="interaction-phase-index">2.</span>Keep the isovector piece</div>
+                <div class="interaction-phase-chip"><span class="interaction-phase-index">3.</span>Rotate into weak CC and add axial</div>
+              </div>
+
+              <div class="cvc-board mt-8" role="img" aria-label="Three-stage CVC bridge: electron scattering measures the electromagnetic vector response, the isovector current is isolated by CVC, and that vector input is carried into the weak charged-current calculation while axial terms remain separate">
+                <div class="cvc-flow-beam" aria-hidden="true">
+                  <span class="cvc-flow-track"></span>
+                  <span class="cvc-flow-pulse"></span>
+                </div>
+
+                <div class="cvc-board-grid">
+                  <article class="cvc-system cvc-system-measure">
+                    <p class="cvc-system-kicker">Step 1</p>
+                    <h4 class="cvc-system-title">Measure the electromagnetic response</h4>
+                    <p class="cvc-system-text">Electron scattering locks down vector form factors and response functions directly from data.</p>
+
+                    <div class="cvc-monitor cvc-monitor-measure" aria-hidden="true">
+                      <div class="cvc-measure-graphic">
+                        <div class="cvc-measure-channel">
+                          <div class="cvc-track-line cvc-track-line-in">
+                            <span class="cvc-dot cvc-dot-electron"></span>
+                          </div>
+                          <div class="cvc-track-line cvc-track-line-out">
+                            <span class="cvc-dot cvc-dot-electron-out"></span>
+                          </div>
+                          <div class="cvc-burst cvc-burst-em"></div>
+                          <div class="cvc-nucleus cvc-nucleus-measure">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                          <div class="cvc-monitor-note cvc-monitor-note-top">eA probe</div>
+                          <div class="cvc-monitor-note cvc-monitor-note-bottom">vector response pinned down</div>
+                        </div>
+
+                        <div class="cvc-spectrum">
+                          <span class="cvc-spectrum-bar"></span>
+                          <span class="cvc-spectrum-bar"></span>
+                          <span class="cvc-spectrum-bar"></span>
+                          <span class="cvc-spectrum-bar"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="cvc-meta-list">
+                      <span class="cvc-meta-chip">eA observables</span>
+                      <span class="cvc-meta-chip">VV sector</span>
+                      <span class="cvc-meta-chip">Model validation</span>
+                    </div>
+                  </article>
+
+                  <div class="cvc-bridge-column">
+                    <div class="cvc-bridge-panel">
+                      <p class="cvc-system-kicker">Step 2</p>
+                      <h4 class="cvc-system-title">Keep only the transferable current</h4>
+                      <p class="cvc-system-text">CVC connects the charged weak vector current to the isovector part of the electromagnetic current, not to the full EM response.</p>
+
+                      <div class="cvc-decomposition" aria-hidden="true">
+                        <div class="cvc-current-pill cvc-current-pill-em">J<sub>EM</sub><sup>&mu;</sup></div>
+                        <div class="cvc-current-branches">
+                          <div class="cvc-current-branch cvc-current-branch-muted">
+                            <span class="cvc-branch-name">Isoscalar</span>
+                            <span class="cvc-branch-note">drops out of CC</span>
+                          </div>
+                          <div class="cvc-current-branch cvc-current-branch-live">
+                            <span class="cvc-branch-name">Isovector</span>
+                            <span class="cvc-branch-note">transported by CVC</span>
+                          </div>
+                        </div>
+                        <div class="cvc-transfer-arrow">
+                          <span class="cvc-transfer-label">CVC isospin rotation</span>
+                          <span class="cvc-transfer-pulse"></span>
+                        </div>
+                        <div class="cvc-current-pill cvc-current-pill-weak">J<sub>V,+</sub><sup>&mu;</sup></div>
+                      </div>
+                    </div>
+
+                    <div class="cvc-bridge-note">
+                      <span class="cvc-bridge-note-label">Transfer rule</span>
+                      <strong class="cvc-bridge-note-strong">Carry the vector structure across, then rebuild the weak process with weak couplings and kinematics.</strong>
+                    </div>
+                  </div>
+
+                  <article class="cvc-system cvc-system-predict">
+                    <p class="cvc-system-kicker">Step 3</p>
+                    <h4 class="cvc-system-title">Recompute the weak interaction</h4>
+                    <p class="cvc-system-text">The vector piece comes from eA constraints, while axial and VA terms remain separate ingredients in the neutrino calculation.</p>
+
+                    <div class="cvc-monitor cvc-monitor-predict" aria-hidden="true">
+                      <div class="cvc-predict-graphic">
+                        <div class="cvc-predict-channel">
+                          <div class="cvc-track-line cvc-track-line-weak-in">
+                            <span class="cvc-dot cvc-dot-neutrino"></span>
+                          </div>
+                          <div class="cvc-track-line cvc-track-line-lepton">
+                            <span class="cvc-product-label cvc-product-label-lepton">l-</span>
+                          </div>
+                          <div class="cvc-track-line cvc-track-line-proton">
+                            <span class="cvc-product-label cvc-product-label-proton">p</span>
+                          </div>
+                          <div class="cvc-burst cvc-burst-weak"></div>
+                          <div class="cvc-nucleus cvc-nucleus-predict">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                          <div class="cvc-monitor-note cvc-monitor-note-top">weak CC event</div>
+                          <div class="cvc-monitor-note cvc-monitor-note-bottom">vector reused, axial separate</div>
+                        </div>
+
+                        <div class="cvc-module-stack">
+                          <div class="cvc-module cvc-module-vector">
+                            <span class="cvc-module-label">vector</span>
+                            <span class="cvc-module-copy">Imported from eA through CVC</span>
+                          </div>
+                          <div class="cvc-module cvc-module-axial">
+                            <span class="cvc-module-label">axial</span>
+                            <span class="cvc-module-copy">Added from neutrino data and theory</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="cvc-meta-list">
+                      <span class="cvc-meta-chip">Weak couplings</span>
+                      <span class="cvc-meta-chip">Axial remains separate</span>
+                      <span class="cvc-meta-chip">QE to DIS</span>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              <div class="cvc-equation-strip mt-6" aria-label="Compact CVC equations">
+                <article class="cvc-equation-card">
+                  <p class="cvc-equation-kicker">Decompose</p>
+                  <div class="cvc-equation">J<sub>EM</sub><sup>&mu;</sup> = J<sub>S</sub><sup>&mu;</sup> + J<sub>3</sub><sup>&mu;</sup></div>
+                  <p class="cvc-equation-caption">Separate the electromagnetic current into isoscalar and isovector pieces.</p>
+                </article>
+                <article class="cvc-equation-card">
+                  <p class="cvc-equation-kicker">Rotate</p>
+                  <div class="cvc-equation">J<sub>V,&plusmn;</sub><sup>&mu;</sup> = J<sub>1</sub><sup>&mu;</sup> &plusmn; iJ<sub>2</sub><sup>&mu;</sup></div>
+                  <p class="cvc-equation-caption">CVC links the weak charged vector current to the isovector isospin triplet.</p>
+                </article>
+                <article class="cvc-equation-card">
+                  <p class="cvc-equation-kicker">Reuse</p>
+                  <div class="cvc-equation">F<sub>i</sub><sup>V</sup> = F<sub>i</sub><sup>p</sup> - F<sub>i</sub><sup>n</sup></div>
+                  <p class="cvc-equation-caption">Neutrino calculations inherit vector nucleon structure through the proton-neutron difference.</p>
+                </article>
+              </div>
+
+              <div class="interaction-copy cvc-copy mt-6">
+                <article class="interaction-panel cvc-panel">
+                  <h4 class="interaction-panel-title"><span class="interaction-index">CVC</span>Vector input from eA to weak CC</h4>
+                  <p>Electron scattering does not hand over a finished neutrino cross section. It constrains the vector hadronic ingredients, and CVC tells us exactly which part of that information can be promoted into the charged weak vector current.</p>
+                  <p class="mt-4">Once that vector sector is transported, the neutrino calculation is rebuilt with weak couplings, weak kinematics, and separate axial or VA terms. The logic applies beyond QE to MEC, RES, DIS, and broader nuclear-response modeling.</p>
+                  <div class="interaction-chip-row">
+                    <span class="interaction-chip">Constrains the VV sector</span>
+                    <span class="interaction-chip">Isovector current only</span>
+                    <span class="interaction-chip">Axial and VA remain separate</span>
+                    <span class="interaction-chip">Applies beyond QE</span>
+                  </div>
+                </article>
+              </div>
+
+              <p class="cvc-callout text-sm md:text-base text-gray-300 mt-6 leading-relaxed border-l-2 border-orange-200/25 pl-4">
+                <span class="text-orange-100 font-semibold">Not a cross-section rescaling:</span> electron data constrain the vector hadronic ingredients; the neutrino prediction is recomputed with weak couplings, kinematics, the weak leptonic tensor, and separate axial or VA pieces.
+              </p>
+            </div>
+          </section>
         </div>
       </div>
 
@@ -557,21 +810,17 @@
         </p>
       </div>
       <div class="reveal">
-        <div class="photo-carousel relative mx-auto max-w-5xl rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03]">
-          <div class="photo-track flex transition-transform duration-700 ease-out" data-carousel-track>
-            <figure class="photo-slide w-full shrink-0">
-              <img src="assets/photos/placeholder-0.png" alt="e4nu collaboration placeholder photo 1">
-              <figcaption class="px-6 py-4 text-sm text-gray-300 bg-navy/65">
-                Collaboration placeholder photo 1
-              </figcaption>
-            </figure>
-            <figure class="photo-slide w-full shrink-0">
-              <img src="assets/photos/placeholder-1.png" alt="e4nu collaboration placeholder photo 2">
-              <figcaption class="px-6 py-4 text-sm text-gray-300 bg-navy/65">
-                Collaboration placeholder photo 2
-              </figcaption>
-            </figure>
-          </div>
+        <div
+          class="photo-carousel relative mx-auto max-w-5xl rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03]"
+          data-carousel-root
+        >
+          <p
+            class="absolute left-6 top-6 z-10 rounded-full border border-white/10 bg-navy/70 px-4 py-2 text-sm text-gray-300"
+            data-carousel-status
+          >
+            Loading carousel...
+          </p>
+          <div class="photo-track flex transition-transform duration-700 ease-out" data-carousel-track></div>
           <button type="button" class="carousel-control absolute top-1/2 left-4 -translate-y-1/2 z-10 flex items-center justify-center" data-carousel-prev aria-label="Show previous photo">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15.75 19.5L8.25 12l7.5-7.5"/>
@@ -583,10 +832,7 @@
             </svg>
           </button>
 
-          <div class="absolute bottom-20 sm:bottom-[4.6rem] left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
-            <button type="button" class="carousel-dot active" data-carousel-dot="0" aria-label="View photo 1" aria-current="true"></button>
-            <button type="button" class="carousel-dot" data-carousel-dot="1" aria-label="View photo 2" aria-current="false"></button>
-          </div>
+          <div class="absolute bottom-20 sm:bottom-[4.6rem] left-1/2 -translate-x-1/2 z-10 flex items-center gap-2" data-carousel-dots></div>
         </div>
       </div>
     </div>
