@@ -4,6 +4,9 @@
   app.config = {
     PARTICLE_COUNT: 40,
     NAVBAR_SCROLL_THRESHOLD: 50,
+    SITE_INTRO_ENABLED: false,
+    SITE_INTRO_REVEAL_MS: 2600,
+    SITE_INTRO_EXIT_MS: 260,
     CAROUSEL_AUTOPLAY_MS: 5500,
     CAROUSEL_DATA_URL: 'assets/data/carousel.json',
     PUBLICATIONS_DATA_URL: 'assets/data/publications.json',

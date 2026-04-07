@@ -2,6 +2,7 @@
   'use strict';
 
   app.lib.dom.onDocumentReady(() => {
+    app.features.reveal.initSiteIntroReveal();
     app.features.particles.initFloatingParticles();
     app.features.reveal.initRevealOnScroll();
     app.features.navigation.initNavigation();

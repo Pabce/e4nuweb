@@ -20,6 +20,50 @@
 
 <body class="bg-navy text-gray-200 font-sans antialiased">
 
+  <div class="site-intro" id="site-intro" role="dialog" aria-modal="true" aria-labelledby="site-intro-title" aria-hidden="true" hidden>
+    <div class="site-intro__backdrop" aria-hidden="true"></div>
+    <div class="site-intro__grid" aria-hidden="true"></div>
+    <div class="site-intro__beam site-intro__beam--electron" aria-hidden="true"></div>
+    <div class="site-intro__beam site-intro__beam--neutrino" aria-hidden="true"></div>
+    <div class="site-intro__collision" aria-hidden="true">
+      <span class="site-intro__collision-ring"></span>
+      <span class="site-intro__collision-ring site-intro__collision-ring--delayed"></span>
+      <span class="site-intro__collision-core"></span>
+    </div>
+    <div class="site-intro__marker site-intro__marker--electron" aria-hidden="true">
+      <span class="site-intro__marker-dot"></span>
+      <span>e- beam</span>
+    </div>
+    <div class="site-intro__marker site-intro__marker--neutrino" aria-hidden="true">
+      <span class="site-intro__marker-dot"></span>
+      <span><span class="site-intro__literal-greek">&nu;<sub>&mu;</sub></span> analogue</span>
+    </div>
+    <div class="site-intro__veil site-intro__veil--top" aria-hidden="true"></div>
+    <div class="site-intro__veil site-intro__veil--bottom" aria-hidden="true"></div>
+
+    <div class="site-intro__panel">
+      <span class="site-intro__eyebrow">Collaborator Reveal</span>
+      <h1 class="site-intro__title" id="site-intro-title">
+        <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="site-intro__logo">
+      </h1>
+      <p class="site-intro__copy">
+        Fire two visibly converging beams into a shared interaction vertex, then let the collaboration site break into focus.
+      </p>
+      <div class="site-intro__sequence" aria-hidden="true">
+        <span class="site-intro__sequence-step" data-intro-seq="beam">Beam In</span>
+        <span class="site-intro__sequence-step" data-intro-seq="collision">Vertex Flash</span>
+        <span class="site-intro__sequence-step" data-intro-seq="reveal">Site Open</span>
+      </div>
+      <p class="site-intro__status" id="site-intro-status" aria-live="polite">
+        Align the beams, trigger the shared vertex, and open the collaboration site.
+      </p>
+      <button type="button" class="site-intro__button" id="site-intro-trigger">
+        Reveal the Collaboration
+      </button>
+      <p class="site-intro__hint">Click anywhere or press Enter on the button to begin.</p>
+    </div>
+  </div>
+
   <!-- Navigation -->
   <nav id="navbar" class="fixed top-0 w-full z-50 nav-blur bg-navy/80 border-b border-white/5 transition-all duration-300">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -1082,14 +1126,28 @@
 
   <!-- Footer -->
   <footer class="py-12 px-6 border-t border-white/5">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="max-w-6xl mx-auto flex flex-col items-center gap-6 text-center lg:flex-row lg:justify-between lg:text-left">
       <div class="flex items-center gap-3">
         <span class="text-xl font-bold tracking-tight">
           <span class="text-accent">e</span><span class="text-white">4</span><span class="text-accent">ν</span>
         </span>
         <span class="text-gray-600 text-sm">&mdash; Electrons for Neutrinos</span>
       </div>
-      <div class="flex items-center gap-6 text-sm text-gray-600">
+      <a
+        href="https://erc.europa.eu/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="European Research Council website"
+        class="group inline-flex items-center gap-3 text-sm text-gray-500 transition-colors hover:text-gray-300"
+      >
+        <img
+          src="assets/logos/erc.png"
+          alt="European Research Council logo"
+          class="h-16 w-auto shrink-0 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.9))]"
+        >
+        <span class="whitespace-nowrap">Funded by <span class="font-medium text-gray-300 transition-colors group-hover:text-white">ERC</span></span>
+      </a>
+      <div class="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600">
         <a href="#about" class="hover:text-accent transition-colors">About</a>
         <a href="#team" class="hover:text-accent transition-colors">Team</a>
         <a href="#publications" class="hover:text-accent transition-colors">Publications</a>

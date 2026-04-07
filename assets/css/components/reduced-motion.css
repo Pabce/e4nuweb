@@ -1,4 +1,38 @@
 @media (prefers-reduced-motion: reduce) {
+  .site-intro__grid,
+  .site-intro__beam,
+  .site-intro__beam::after,
+  .site-intro__collision-ring,
+  .site-intro__collision-core,
+  .site-intro__collision::after,
+  .site-intro__marker-dot {
+    animation: none !important;
+  }
+  body.site-pre-reveal > :not(.site-intro),
+  body.site-revealing > :not(.site-intro) {
+    animation: none !important;
+  }
+  .site-intro,
+  .site-intro__backdrop,
+  .site-intro__panel,
+  .site-intro__veil {
+    transition: none !important;
+  }
+  .site-intro__beam {
+    opacity: 0.45;
+    transform: translateY(-50%) scaleX(1);
+  }
+  .site-intro__collision-ring {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(9);
+  }
+  .site-intro__collision-core {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .site-intro__status {
+    min-height: 0;
+  }
   .electron-group,
   .gamma-wave,
   .interaction-flash,
