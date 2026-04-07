@@ -22,17 +22,5 @@
     "imageSrc": "assets/images/carousel/collab-long.jpeg",
     "imageAlt": "e4nu collaboration photo collab long",
     "caption": "e4ν Collaboration at Jefferson Lab Hall B"
-  },
-  {
-    "id": "placeholder-0",
-    "imageSrc": "assets/images/carousel/placeholder-0.png",
-    "imageAlt": "e4nu collaboration photo placeholder 0",
-    "caption": "placeholder-0"
-  },
-  {
-    "id": "placeholder-1",
-    "imageSrc": "assets/images/carousel/placeholder-1.png",
-    "imageAlt": "e4nu collaboration photo placeholder 1",
-    "caption": "placeholder-1"
   }
 ]
