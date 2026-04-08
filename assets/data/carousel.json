@@ -2,7 +2,7 @@
   {
     "id": "collab-1",
     "imageSrc": "assets/images/carousel/collab-1-upright.webp",
-    "imageFallbackSrc": "assets/images/carousel/collab-1.jpg",
+    "imageFallbackSrc": "assets/images/carousel/collab-1-upright.jpg",
     "imageAlt": "e4nu collaboration photo collab 1",
     "caption": "e4ν Collaboration at Jefferson Lab Hall B"
   },
