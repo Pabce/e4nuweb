@@ -945,6 +945,10 @@ body.site-revealed .site-intro {
 /* Hero background image */
 .hero-gradient {
   background-image: url('../images/e4nufull.png');
+  background-image: image-set(
+    url('../images/e4nufull.webp') type('image/webp') 1x,
+    url('../images/e4nufull.png') type('image/png') 1x
+  );
   background-size: cover;
   /* Increase --hero-crop-top to push image up and hide more top area */
   background-position: center var(--hero-crop-top);

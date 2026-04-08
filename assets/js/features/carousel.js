@@ -23,6 +23,31 @@
     return element;
   }
 
+  function createOptimizedImage(primarySrc, fallbackSrc, alt) {
+    const image = createElement('img', 'block');
+
+    image.alt = alt;
+    image.decoding = 'async';
+    image.loading = 'lazy';
+
+    if (!fallbackSrc) {
+      image.src = primarySrc;
+      return image;
+    }
+
+    const picture = createElement('picture', 'block');
+    const source = createElement('source');
+
+    source.srcset = primarySrc;
+    source.type = 'image/webp';
+    image.src = fallbackSrc;
+
+    picture.appendChild(source);
+    picture.appendChild(image);
+
+    return picture;
+  }
+
   function clearNode(node) {
     while (node.firstChild) {
       node.removeChild(node.firstChild);
@@ -48,6 +73,10 @@
         throw new Error(`Missing carousel field: ${fieldName}`);
       }
     });
+
+    if (slide.imageFallbackSrc && (typeof slide.imageFallbackSrc !== 'string' || !slide.imageFallbackSrc.trim())) {
+      throw new Error(`Invalid carousel fallback image for ${slide.id}`);
+    }
 
     return slide;
   }
@@ -77,13 +106,9 @@
 
   function createSlide(slide) {
     const figure = createElement('figure', 'photo-slide w-full shrink-0');
-    const image = createElement('img');
     const caption = createElement('figcaption', 'px-6 py-4 text-sm text-gray-300 bg-navy/65', slide.caption);
 
-    image.src = slide.imageSrc;
-    image.alt = slide.imageAlt;
-
-    figure.appendChild(image);
+    figure.appendChild(createOptimizedImage(slide.imageSrc, slide.imageFallbackSrc, slide.imageAlt));
     figure.appendChild(caption);
 
     return figure;

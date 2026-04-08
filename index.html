@@ -44,7 +44,10 @@
     <div class="site-intro__panel">
       <span class="site-intro__eyebrow">Collaborator Reveal</span>
       <h1 class="site-intro__title" id="site-intro-title">
-        <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="site-intro__logo">
+        <picture>
+          <source srcset="assets/logos/e4nu-logo.webp" type="image/webp">
+          <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="site-intro__logo">
+        </picture>
       </h1>
       <p class="site-intro__copy">
         Fire two visibly converging beams into a shared interaction vertex, then let the collaboration site break into focus.
@@ -68,7 +71,10 @@
   <nav id="navbar" class="fixed top-0 w-full z-50 nav-blur bg-navy/80 border-b border-white/5 transition-all duration-300">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="#hero" class="flex items-center gap-3 group">
-        <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="nav-logo">
+        <picture>
+          <source srcset="assets/logos/e4nu-logo.webp" type="image/webp">
+          <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="nav-logo">
+        </picture>
       </a>
       <div class="hidden md:flex items-center gap-8 text-sm font-medium">
         <a href="#about" class="text-gray-400 hover:text-accent transition-colors">About</a>
@@ -125,7 +131,10 @@
         </span>
       </div>
       <h1 class="mb-6">
-        <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="hero-logo hero-logo-fixed">
+        <picture>
+          <source srcset="assets/logos/e4nu-logo.webp" type="image/webp">
+          <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="hero-logo hero-logo-fixed">
+        </picture>
       </h1>
       <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-10">
         Precision electron-nucleus measurements to inform, constrain, and validate models of neutrino-nucleus interactions.
@@ -901,11 +910,16 @@
                 The CLAS12 Detector System
               </div>
               <div class="relative z-0 flex items-center justify-center h-full px-4 pt-16 pb-6 md:px-6 md:pt-20 md:pb-8">
-                <img
-                  src="assets/images/clas12diagram_transparent.png"
-                  alt="Annotated CLAS12 detector diagram at Jefferson Lab"
-                  class="block w-full max-w-full h-auto max-h-[20rem] md:max-h-[26rem] object-contain object-center drop-shadow-[0_0_28px_rgba(56,189,248,0.18)]"
-                >
+                <picture class="block w-full">
+                  <source srcset="assets/images/clas12diagram_transparent.webp" type="image/webp">
+                  <img
+                    src="assets/images/clas12diagram_transparent.png"
+                    alt="Annotated CLAS12 detector diagram at Jefferson Lab"
+                    loading="lazy"
+                    decoding="async"
+                    class="block w-full max-w-full h-auto max-h-[20rem] md:max-h-[26rem] object-contain object-center drop-shadow-[0_0_28px_rgba(56,189,248,0.18)]"
+                  >
+                </picture>
               </div>
             </div>
           </div>
@@ -977,7 +991,10 @@
         <!-- Tel Aviv University -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.tau.ac.il/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/tau.png" alt="Tel Aviv University" class="h-16 w-auto brightness-0 invert opacity-80 group-hover/logo:opacity-100 transition-opacity">
+            <picture>
+              <source srcset="assets/logos/tau.webp" type="image/webp">
+              <img src="assets/logos/tau.png" alt="Tel Aviv University" loading="lazy" decoding="async" class="h-16 w-auto brightness-0 invert opacity-80 group-hover/logo:opacity-100 transition-opacity">
+            </picture>
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">Tel Aviv University</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">ISRAEL</span>
@@ -996,7 +1013,10 @@
         <!-- Jefferson Lab -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.jlab.org/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/jlab.png" alt="Jefferson Lab" class="h-16 w-auto opacity-90 drop-shadow-[0_0_5px_rgba(255,255,255,0.9)] group-hover/logo:opacity-100 transition-opacity">
+            <picture>
+              <source srcset="assets/logos/jlab.webp" type="image/webp">
+              <img src="assets/logos/jlab.png" alt="Jefferson Lab" loading="lazy" decoding="async" class="h-16 w-auto opacity-90 drop-shadow-[0_0_5px_rgba(255,255,255,0.9)] group-hover/logo:opacity-100 transition-opacity">
+            </picture>
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">Jefferson Lab</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">USA</span>
@@ -1011,7 +1031,10 @@
         <!-- Old Dominion University -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.odu.edu/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/odu2.png" alt="Old Dominion University" class="h-14 w-auto brightness-0 invert opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            <picture>
+              <source srcset="assets/logos/odu2.webp" type="image/webp">
+              <img src="assets/logos/odu2.png" alt="Old Dominion University" loading="lazy" decoding="async" class="h-14 w-auto brightness-0 invert opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            </picture>
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">Old Dominion University</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">USA</span>
@@ -1026,7 +1049,10 @@
         <!-- University of York -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.york.ac.uk/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/york.png" alt="University of York" class="h-14 w-auto brightness-0 invert opacity-80 group-hover/logo:opacity-100 transition-opacity">
+            <picture>
+              <source srcset="assets/logos/york.webp" type="image/webp">
+              <img src="assets/logos/york.png" alt="University of York" loading="lazy" decoding="async" class="h-14 w-auto brightness-0 invert opacity-80 group-hover/logo:opacity-100 transition-opacity">
+            </picture>
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">University of York</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">UK</span>
@@ -1044,7 +1070,10 @@
         <!-- Universitat de Valencia -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.uv.es/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/valencia.png" alt="Universitat de Val&egrave;ncia" class="h-14 w-auto brightness-0 invert opacity-80 group-hover/logo:opacity-100 transition-opacity">
+            <picture>
+              <source srcset="assets/logos/valencia.webp" type="image/webp">
+              <img src="assets/logos/valencia.png" alt="Universitat de Val&egrave;ncia" loading="lazy" decoding="async" class="h-14 w-auto brightness-0 invert opacity-80 group-hover/logo:opacity-100 transition-opacity">
+            </picture>
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">Universitat de Val&egrave;ncia</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">SPAIN</span>
@@ -1058,7 +1087,10 @@
         <!-- University of Pittsburgh -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.pitt.edu/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/pitt2.png" alt="University of Pittsburgh" class="h-16 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            <picture>
+              <source srcset="assets/logos/pitt2.webp" type="image/webp">
+              <img src="assets/logos/pitt2.png" alt="University of Pittsburgh" loading="lazy" decoding="async" class="h-16 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            </picture>
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">University of Pittsburgh</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">USA</span>
@@ -1072,7 +1104,10 @@
         <!-- University of Southern Maine -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://usm.maine.edu/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/usm.png" alt="University of Southern Maine" class="h-12 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            <picture>
+              <source srcset="assets/logos/usm.webp" type="image/webp">
+              <img src="assets/logos/usm.png" alt="University of Southern Maine" loading="lazy" decoding="async" class="h-12 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            </picture>
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">University of Southern Maine</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">USA</span>
@@ -1086,7 +1121,10 @@
         <!-- Ohio University -->
         <div class="p-8 rounded-2xl bg-white/[0.03] border border-white/5 card-hover">
           <a href="https://www.ohio.edu/" target="_blank" rel="noopener" class="flex items-center gap-5 mb-6 group/logo">
-            <img src="assets/logos/ohio.png" alt="Ohio University" class="h-14 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            <picture>
+              <source srcset="assets/logos/ohio.webp" type="image/webp">
+              <img src="assets/logos/ohio.png" alt="Ohio University" loading="lazy" decoding="async" class="h-14 w-auto opacity-90 group-hover/logo:opacity-100 transition-opacity">
+            </picture>
             <div>
               <h3 class="text-lg font-semibold text-white group-hover/logo:text-accent transition-colors">Ohio University</h3>
               <span class="text-xs font-mono text-accent/60 tracking-wider">USA</span>
@@ -1221,11 +1259,16 @@
         aria-label="European Research Council website"
         class="group inline-flex items-center gap-3 text-sm text-gray-500 transition-colors hover:text-gray-300"
       >
-        <img
-          src="assets/logos/erc.png"
-          alt="European Research Council logo"
-          class="h-16 w-auto shrink-0 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.9))]"
-        >
+        <picture>
+          <source srcset="assets/logos/erc.webp" type="image/webp">
+          <img
+            src="assets/logos/erc.png"
+            alt="European Research Council logo"
+            loading="lazy"
+            decoding="async"
+            class="h-16 w-auto shrink-0 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.9))]"
+          >
+        </picture>
         <span class="whitespace-nowrap">Funded by <span class="font-medium text-gray-300 transition-colors group-hover:text-white">ERC</span></span>
       </a>
       <div class="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600">

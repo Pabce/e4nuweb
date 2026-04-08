@@ -22,7 +22,10 @@
   <nav id="navbar" class="fixed top-0 w-full z-50 nav-blur bg-navy/80 border-b border-white/5 transition-all duration-300">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="index.html#hero" class="flex items-center gap-3 group">
-        <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="nav-logo">
+        <picture>
+          <source srcset="assets/logos/e4nu-logo.webp" type="image/webp">
+          <img src="assets/logos/e4nu-logo.png" alt="e4nu" class="nav-logo">
+        </picture>
       </a>
       <div class="hidden md:flex items-center gap-8 text-sm font-medium">
         <a href="index.html#about" class="text-gray-400 hover:text-accent transition-colors">About</a>
@@ -98,11 +101,16 @@
         aria-label="European Research Council website"
         class="group inline-flex items-center gap-3 text-sm text-gray-500 transition-colors hover:text-gray-300"
       >
-        <img
-          src="assets/logos/erc.png"
-          alt="European Research Council logo"
-          class="h-14 w-auto shrink-0 [filter:drop-shadow(0_0_12px_rgba(255,255,255,0.32))]"
-        >
+        <picture>
+          <source srcset="assets/logos/erc.webp" type="image/webp">
+          <img
+            src="assets/logos/erc.png"
+            alt="European Research Council logo"
+            loading="lazy"
+            decoding="async"
+            class="h-14 w-auto shrink-0 [filter:drop-shadow(0_0_12px_rgba(255,255,255,0.32))]"
+          >
+        </picture>
         <span class="whitespace-nowrap">Funded by <span class="font-medium text-gray-300 transition-colors group-hover:text-white">ERC</span></span>
       </a>
       <div class="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600">

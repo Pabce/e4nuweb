@@ -29,6 +29,31 @@
     return link;
   }
 
+  function createOptimizedImage(primarySrc, fallbackSrc, alt, className) {
+    var image = createElement('img', className);
+
+    image.alt = alt;
+    image.decoding = 'async';
+    image.loading = 'lazy';
+
+    if (!fallbackSrc) {
+      image.src = primarySrc;
+      return image;
+    }
+
+    var picture = createElement('picture', 'block');
+    var source = createElement('source');
+
+    source.srcset = primarySrc;
+    source.type = 'image/webp';
+    image.src = fallbackSrc;
+
+    picture.appendChild(source);
+    picture.appendChild(image);
+
+    return picture;
+  }
+
   function readLimit(root) {
     var rawValue = root.getAttribute('data-publications-limit');
 
@@ -91,6 +116,13 @@
       (!publication.citationLinkLabel && publication.citationLinkUrl)
     ) {
       throw new Error('Citation link fields must be provided together for ' + publication.id);
+    }
+
+    if (
+      publication.imageFallbackSrc &&
+      (typeof publication.imageFallbackSrc !== 'string' || !publication.imageFallbackSrc.trim())
+    ) {
+      throw new Error('Invalid publication fallback image for ' + publication.id);
     }
 
     return publication;
@@ -163,11 +195,6 @@
       publication.paperUrl,
       'flex-shrink-0 w-full md:w-48 rounded-lg overflow-hidden border border-white/10 hover:border-accent/30 transition-colors',
     );
-    var image = createElement('img', 'w-full h-full object-cover');
-
-    image.src = publication.imageSrc;
-    image.alt = publication.imageAlt;
-
     badge.appendChild(badgeNumber);
     meta.appendChild(authors);
     meta.appendChild(title);
@@ -176,7 +203,14 @@
     header.appendChild(meta);
 
     summaryWrap.appendChild(summary);
-    imageLink.appendChild(image);
+    imageLink.appendChild(
+      createOptimizedImage(
+        publication.imageSrc,
+        publication.imageFallbackSrc,
+        publication.imageAlt,
+        'w-full h-full object-cover',
+      ),
+    );
     body.appendChild(summaryWrap);
     body.appendChild(imageLink);
 
