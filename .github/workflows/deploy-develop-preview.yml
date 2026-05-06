@@ -1,0 +1,66 @@
+name: Deploy develop preview
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: develop-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Publish develop to preview Pages repo
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out develop
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Prepare preview files
+        run: |
+          rm -f CNAME
+          touch .nojekyll
+
+      - name: Configure preview deploy key
+        env:
+          DEPLOY_KEY: ${{ secrets.E4NUWEB_DEVELOP_PAGES_DEPLOY_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/e4nuweb_develop_pages
+          chmod 600 ~/.ssh/e4nuweb_develop_pages
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<'EOF'
+          Host github.com
+            IdentityFile ~/.ssh/e4nuweb_develop_pages
+            IdentitiesOnly yes
+          EOF
+
+      - name: Publish to preview repo
+        env:
+          PREVIEW_REPO: git@github.com:Pabce/e4nuweb-develop.git
+        run: |
+          preview_dir="$(mktemp -d)"
+          git clone --depth=1 "$PREVIEW_REPO" "$preview_dir"
+          find "$preview_dir" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          rsync -a --exclude='.git' --exclude='.github' ./ "$preview_dir/"
+
+          cd "$preview_dir"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "Preview repo already matches develop."
+            exit 0
+          fi
+
+          git commit -m "Deploy develop preview"
+          git push origin HEAD:main
